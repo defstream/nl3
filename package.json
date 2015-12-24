@@ -7,7 +7,7 @@
   "main": "index.js",
   "scripts": {
     "doc": "jsdoc -R ./README.md -r -d ./doc/api ./lib ./index.js",
-    "test": "istanbul cover --dir ./doc/coverage _mocha -- --recursive",
+    "test": "istanbul cover --dir ./doc/coverage _mocha -- --recursive && cat ./doc/coverage/lcov.info | ./node_modules/codecov.io/bin/codecov.io.js",
     "analyze": "plato -d ./doc/analysis -r ./lib ./index.js",
     "clean": "rm -rf ./doc",
     "build": "npm run clean && npm run doc && npm run test && npm run analyze"
@@ -34,12 +34,14 @@
     "javascript"
   ],
   "dependencies": {
+    "codecov.io": "^0.1.6",
     "natural": "0.2.1",
     "neo-async": "1.7.1",
     "speakeasy-nlp": "0.2.2"
   },
   "devDependencies": {
     "chai": "3.4.1",
+    "codecov.io": "^0.1.6",
     "istanbul": "0.4.1",
     "jsdoc": "3.4.0",
     "mocha": "2.3.4",

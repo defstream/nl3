@@ -1,5 +1,24 @@
 ## nl3 - Natural Language Triples
 
+<p align="center">
+        <img src="https://img.shields.io/gemnasium/defstream/nl3.svg"
+             alt="Gemnasium">
+
+        <img src="https://img.shields.io/npm/v/nl3.svg"
+             alt="npm version">
+
+        <img src="https://img.shields.io/travis/defstream/nl3.svg"
+             alt="build status">
+
+         <img src="https://img.shields.io/codecov/c/github/defstream/nl3.svg"
+              alt="coverage">
+</p>
+
+
+
+
+
+
 **nl3** is a natural language triple library, used for parsing triples from plain english.
 Currently nl3 is best at generating triples from  simple short phrases that contain the Subject, Predicate and Object in order.
 
@@ -66,6 +85,34 @@ All of which will have the same output.
 
 ```shell
 $ npm install nl3 --save
+```
+
+# Development Scripts
+Before runing any development scripts, be sure to first install the dev modules.
+
+```shell
+$ npm install nl3 --save --dev
+```
+
+#### Build Documentation
+Outputs code documentation files to the `./doc/api` folder.
+
+```shell
+$ npm run doc
+```
+
+#### Static Analysis
+Outputs static analysis files to the `./doc/analysis` folder.
+
+```shell
+$ npm run analyze
+```
+
+#### Test + Coverage
+Outputs code coverage files to the `./doc/coverage` folder.
+
+```shell
+$ npm run test
 ```
 
 # API
