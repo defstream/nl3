@@ -1,0 +1,45 @@
+{
+  "name": "nl3",
+  "version": "0.0.1",
+  "description": "nl3 - natural language triples",
+  "license": "MIT",
+  "author": "Hector Gray <defstream@gmail.com> (https://github.com/defstream)",
+  "main": "index.js",
+  "scripts": {
+    "doc": "jsdoc -R ./README.md -r -d ./doc/api ./lib ./index.js",
+    "test": "istanbul cover --dir ./doc/coverage _mocha -- --recursive",
+    "analyze": "plato -d ./doc/analysis -r ./lib ./index.js",
+    "clean": "rm -rf ./doc",
+    "build": "npm run clean && npm run doc && npm run test && npm run analyze"
+  },
+  "keywords": [
+    "nl3",
+    "nl",
+    "l3n",
+    "lne3",
+    "n3l",
+    "natural",
+    "language",
+    "triple",
+    "tripple",
+    "3",
+    "nodejs",
+    "node",
+    "rdf",
+    "triples",
+    "english",
+    "text"
+  ],
+  "dependencies": {
+    "natural": "0.2.1",
+    "neo-async": "1.7.1",
+    "speakeasy-nlp": "0.2.2"
+  },
+  "devDependencies": {
+    "chai": "3.4.1",
+    "istanbul": "0.4.1",
+    "jsdoc": "3.4.0",
+    "mocha": "2.3.4",
+    "plato": "1.5.0"
+  }
+}
