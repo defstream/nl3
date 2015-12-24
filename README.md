@@ -1,17 +1,21 @@
 ## nl3 - Natural Language Triples
 
 <p align="center">
-        <img src="https://img.shields.io/gemnasium/defstream/nl3.svg"
-             alt="Gemnasium">
+  <img src="https://img.shields.io/gemnasium/defstream/nl3.svg"
+       alt="Gemnasium">
 
-        <img src="https://img.shields.io/npm/v/nl3.svg"
-             alt="npm version">
+  <img src="https://img.shields.io/npm/v/nl3.svg"
+       alt="npm version">
 
-        <img src="https://img.shields.io/travis/defstream/nl3.svg"
-             alt="build status">
+  <img src="https://img.shields.io/travis/defstream/nl3.svg"
+       alt="build status">
 
-         <img src="https://img.shields.io/codecov/c/github/defstream/nl3.svg"
-              alt="coverage">
+   <img src="https://img.shields.io/codecov/c/github/defstream/nl3.svg"
+        alt="coverage">
+
+  <img src="https://img.shields.io/circleci/project/defstream/nl3.svg"
+       alt="coverage">
+       
 </p>
 
 
