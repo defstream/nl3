@@ -4,9 +4,6 @@
   <img src="https://img.shields.io/gemnasium/defstream/nl3.svg"
        alt="Gemnasium">
 
-  <img src="https://img.shields.io/npm/v/nl3.svg"
-       alt="npm version">
-
   <img src="https://img.shields.io/travis/defstream/nl3.svg"
        alt="build status">
 
@@ -15,13 +12,10 @@
 
   <img src="https://img.shields.io/circleci/project/defstream/nl3.svg"
        alt="coverage">
-       
+
+   <img src="https://img.shields.io/npm/v/nl3.svg"
+        alt="npm version">   
 </p>
-
-
-
-
-
 
 **nl3** is a natural language triple library, used for parsing triples from plain english.
 Currently nl3 is best at generating triples from  simple short phrases that contain the Subject, Predicate and Object in order.
