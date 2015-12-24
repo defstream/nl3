@@ -6,6 +6,10 @@ Currently nl3 is best at generating triples from  simple short phrases that cont
 #### What is a triple?
 A triple is a data structure that represents a Subject, Predicate and Object or S P O.
 
+**More Information**
+- https://en.wikipedia.org/wiki/Triplestore
+- https://en.wikipedia.org/wiki/Resource_Description_Framework
+
 #### TLDR;
 
 ```javascript
@@ -57,10 +61,6 @@ All of which will have the same output.
   }
 }
 ```
-
-**More Information**
-- https://en.wikipedia.org/wiki/Triplestore
-- https://en.wikipedia.org/wiki/Resource_Description_Framework
 
 # Installation
 
