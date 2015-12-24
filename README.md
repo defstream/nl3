@@ -1,20 +1,20 @@
 ## nl3 - Natural Language Triples
 
 <p align="center">
-  <img src="https://img.shields.io/gemnasium/defstream/nl3.svg"
-       alt="Gemnasium">
+  <a href="https://gemnasium.com/defstream/nl3"><img src="https://img.shields.io/gemnasium/defstream/nl3.svg"
+       alt="Gemnasium"></a>
 
-  <img src="https://img.shields.io/travis/defstream/nl3.svg"
-       alt="build status">
+  <a href="https://travis-ci.org/defstream/nl3"><img src="https://img.shields.io/travis/defstream/nl3.svg"
+       alt="build status"></a>
 
-   <img src="https://img.shields.io/codecov/c/github/defstream/nl3.svg"
-        alt="coverage">
+  <a href="https://codecov.io/github/defstream/nl3"><img src="https://img.shields.io/codecov/c/github/defstream/nl3.svg"
+        alt="coverage"></a>
 
-  <img src="https://img.shields.io/circleci/project/defstream/nl3.svg"
-       alt="coverage">
+  <a href="https://circleci.com/gh/defstream/nl3"><img src="https://img.shields.io/circleci/project/defstream/nl3.svg"
+       alt="coverage"></a>
 
-   <img src="https://img.shields.io/npm/v/nl3.svg"
-        alt="npm version">   
+   <a href="http://npmjs.com/package/nl3"><img src="https://img.shields.io/npm/v/nl3.svg"
+        alt="npm version"></a>
 </p>
 
 <p align="center">
