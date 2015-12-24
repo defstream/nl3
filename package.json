@@ -5,6 +5,9 @@
   "license": "MIT",
   "author": "Hector Gray <hgray@incredi.co> (https://github.com/defstream)",
   "main": "index.js",
+  "engines": {
+    "node": ">=0.10"
+  },
   "scripts": {
     "doc": "jsdoc -R ./README.md -r -d ./doc/api ./lib ./index.js",
     "test": "istanbul cover --dir ./doc/coverage _mocha -- --recursive && cat ./doc/coverage/lcov.info | ./node_modules/codecov.io/bin/codecov.io.js",
