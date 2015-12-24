@@ -32,7 +32,6 @@
     "graph",
     "search",
     "javascript"
-    "
   ],
   "dependencies": {
     "natural": "0.2.1",
