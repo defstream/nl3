@@ -137,7 +137,7 @@ print( 'users who message user jill', nl3.parse('users who message user jill') )
 
 ```
 
-Returns
+**returns:**
 
 ```javascript
 
