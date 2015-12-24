@@ -166,7 +166,7 @@ users who message user jill,
 ```
 
 ### vNext
-Support for natural random order queries, these are not in (SPO) order, such as messages that user bob created (OSP), created messages by user jill (POS), created by user jill messages (PSO), (SO) user jills messages, (OS) messages for user jill'
+Support for natural random order queries, these are not in (SPO) order, such as messages that user bob created (OSP), created messages by user jill (POS), created by user jill messages (PSO), (SO) user jills messages, (OS) messages for user jill.
 ```javascript
   nl3.parse('users that follow user 42')
   nl3.parse('users followed by user 42')
