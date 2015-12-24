@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Nl3 by defstream</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Nl3</h1>
+      <h2 class="project-tagline">nl3  - Natural Language Triples</h2>
+      <a href="https://github.com/defstream/nl3" class="btn">View on GitHub</a>
+      <a href="https://github.com/defstream/nl3/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/defstream/nl3/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h2>
+<a id="nl3---natural-language-triples" class="anchor" href="#nl3---natural-language-triples" aria-hidden="true"><span class="octicon octicon-link"></span></a>nl3 - Natural Language Triples</h2>
+
+<p align="center">
+        <img src="https://img.shields.io/gemnasium/defstream/nl3.svg" alt="Gemnasium">
+
+        <img src="https://img.shields.io/npm/v/nl3.svg" alt="npm version">
+
+        <img src="https://img.shields.io/travis/defstream/nl3.svg" alt="build status">
+
+         <img src="https://img.shields.io/codecov/c/github/defstream/nl3.svg" alt="coverage">
+</p>
+
+<p><strong>nl3</strong> is a natural language triple library, used for parsing triples from plain english.
+Currently nl3 is best at generating triples from  simple short phrases that contain the Subject, Predicate and Object in order.</p>
+
+<h4>
+<a id="what-is-a-triple" class="anchor" href="#what-is-a-triple" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is a triple?</h4>
+
+<p>A triple is a data structure that represents a Subject, Predicate and Object or S P O.</p>
+
+<p><strong>More Information</strong></p>
+
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Triplestore">https://en.wikipedia.org/wiki/Triplestore</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Resource_Description_Framework">https://en.wikipedia.org/wiki/Resource_Description_Framework</a></li>
+</ul>
+
+<h4>
+<a id="tldr" class="anchor" href="#tldr" aria-hidden="true"><span class="octicon octicon-link"></span></a>TLDR;</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> nl3 <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>nl3<span class="pl-pds">'</span></span>)({
+<span class="pl-c">/**</span>
+<span class="pl-c">* Specifies valid triples in plain english ex: 'Subject Predicate Object'.</span>
+<span class="pl-c">* All values will be singularized.</span>
+<span class="pl-c">* <span class="pl-k">@type</span> {Array}</span>
+<span class="pl-c">*/</span>
+  grammar<span class="pl-k">:</span> [
+    <span class="pl-s"><span class="pl-pds">'</span>users message users<span class="pl-pds">'</span></span>
+  ],
+<span class="pl-c">/**</span>
+<span class="pl-c">* Extend your vocabulary by mapping word stems to existing predicates.</span>
+<span class="pl-c">* <span class="pl-k">@type</span> {Object}</span>
+<span class="pl-c">*/</span>
+  vocabulary<span class="pl-k">:</span> {
+    msg<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>message<span class="pl-pds">'</span></span>,     <span class="pl-c">// user bob msgs user tom</span>
+    messag<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>message<span class="pl-pds">'</span></span>,  <span class="pl-c">// user bob messaged user jill</span>
+    contact<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>message<span class="pl-pds">'</span></span>  <span class="pl-c">// user bob contacted user bill</span>
+  }
+});</pre></div>
+
+<p>The client returned is able to parse these queries.</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">nl3</span>.<span class="pl-c1">parse</span>(<span class="pl-s"><span class="pl-pds">'</span>user jack msg user jill<span class="pl-pds">'</span></span>);
+<span class="pl-smi">nl3</span>.<span class="pl-c1">parse</span>(<span class="pl-s"><span class="pl-pds">'</span>user jack msgs user jill<span class="pl-pds">'</span></span>);
+<span class="pl-smi">nl3</span>.<span class="pl-c1">parse</span>(<span class="pl-s"><span class="pl-pds">'</span>user jack messaged user jill<span class="pl-pds">'</span></span>);
+<span class="pl-smi">nl3</span>.<span class="pl-c1">parse</span>(<span class="pl-s"><span class="pl-pds">'</span>user jack contacted user jill<span class="pl-pds">'</span></span>);
+<span class="pl-smi">nl3</span>.<span class="pl-c1">parse</span>(<span class="pl-s"><span class="pl-pds">'</span>user jack contacts user jill<span class="pl-pds">'</span></span>);</pre></div>
+
+<p>All of which will have the same output.</p>
+
+<div class="highlight highlight-source-js"><pre>{
+  subject<span class="pl-k">:</span> {
+    type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>,
+    value<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>jack<span class="pl-pds">'</span></span>
+  },
+  predicate<span class="pl-k">:</span> {
+    value<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>message<span class="pl-pds">'</span></span>
+  },
+  object<span class="pl-k">:</span> {
+    type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>,
+    value<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>jill<span class="pl-pds">'</span></span>
+  }
+}</pre></div>
+
+<h1>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h1>
+
+<div class="highlight highlight-source-shell"><pre>$ npm install nl3 --save</pre></div>
+
+<h1>
+<a id="development-scripts" class="anchor" href="#development-scripts" aria-hidden="true"><span class="octicon octicon-link"></span></a>Development Scripts</h1>
+
+<p>Before runing any development scripts, be sure to first install the dev modules.</p>
+
+<div class="highlight highlight-source-shell"><pre>$ npm install nl3 --save --dev</pre></div>
+
+<h4>
+<a id="build-documentation" class="anchor" href="#build-documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Build Documentation</h4>
+
+<p>Outputs code documentation files to the <code>./doc/api</code> folder.</p>
+
+<div class="highlight highlight-source-shell"><pre>$ npm run doc</pre></div>
+
+<h4>
+<a id="static-analysis" class="anchor" href="#static-analysis" aria-hidden="true"><span class="octicon octicon-link"></span></a>Static Analysis</h4>
+
+<p>Outputs static analysis files to the <code>./doc/analysis</code> folder.</p>
+
+<div class="highlight highlight-source-shell"><pre>$ npm run analyze</pre></div>
+
+<h4>
+<a id="test--coverage" class="anchor" href="#test--coverage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Test + Coverage</h4>
+
+<p>Outputs code coverage files to the <code>./doc/coverage</code> folder.</p>
+
+<div class="highlight highlight-source-shell"><pre>$ npm run <span class="pl-c1">test</span></pre></div>
+
+<h1>
+<a id="api" class="anchor" href="#api" aria-hidden="true"><span class="octicon octicon-link"></span></a>API</h1>
+
+<h3>
+<a id="nl3options" class="anchor" href="#nl3options" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>nl3(options)</code>
+</h3>
+
+<p>Create an nl3 instance.</p>
+
+<p><strong>parameters:</strong></p>
+
+<ul>
+<li>
+<strong>options</strong>            {Object}    The options for the nl3 client.</li>
+<li>
+<strong>options.grammar</strong>    {Array}     An array of valid grammar in the format of 'S P O'.</li>
+<li>
+<strong>options.vocabulary</strong> {Array}     An object mapping the phonetic root of an object to a predicate.</li>
+</ul>
+
+<p><strong>returns</strong>: a new instance of the nl3 client.</p>
+
+<p>Example</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> nl3 <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>nl3<span class="pl-pds">'</span></span>)({
+<span class="pl-c">/**</span>
+<span class="pl-c">* Specify valid triples in plain english ex: 'Subject Predicate Object'.</span>
+<span class="pl-c">* The Subject, Predicate and Object will be will be singularized, if presented in any tense.</span>
+<span class="pl-c">* <span class="pl-k">@type</span> {Array}</span>
+<span class="pl-c">*/</span>
+  grammar<span class="pl-k">:</span> [
+    <span class="pl-s"><span class="pl-pds">'</span>users message users<span class="pl-pds">'</span></span>
+  ],
+<span class="pl-c">/**</span>
+<span class="pl-c">* Extend the vocabulary of your predicates by mapping word stems to existing predicates within your grammar.</span>
+<span class="pl-c">* <span class="pl-k">@type</span> {Object}</span>
+<span class="pl-c">*/</span>
+  vocabulary<span class="pl-k">:</span> {
+    msg<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>message<span class="pl-pds">'</span></span>,     <span class="pl-c">// user bob msgs user tom</span>
+    messag<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>message<span class="pl-pds">'</span></span>,  <span class="pl-c">// user bob messaged user jill</span>
+    contact<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>message<span class="pl-pds">'</span></span>  <span class="pl-c">// user bob contacted user bill</span>
+  }
+});</pre></div>
+
+<h3>
+<a id="nl3parse-text-" class="anchor" href="#nl3parse-text-" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>nl3.parse( text )</code>
+</h3>
+
+<p><strong>parameters:</strong></p>
+
+<ul>
+<li>
+<strong>text</strong>:  {String}  A string containing a S P O phrase in plain english.
+<strong>returns</strong>: A triple containing the results of of the parsed Subject Predicate and Object.</li>
+</ul>
+
+<p>Example</p>
+
+<div class="highlight highlight-source-js"><pre>
+<span class="pl-k">var</span> nl3 <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>nl3<span class="pl-pds">'</span></span>)({
+  grammar<span class="pl-k">:</span> [
+    <span class="pl-s"><span class="pl-pds">'</span>users message users<span class="pl-pds">'</span></span>
+  ],
+  vocabulary<span class="pl-k">:</span> {
+    contact<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>message<span class="pl-pds">'</span></span>, <span class="pl-c">// user bob contacted user bill</span>
+  }
+});
+
+<span class="pl-k">function</span> <span class="pl-en">print</span> (<span class="pl-smi">description</span>, <span class="pl-smi">triple</span>) {
+  <span class="pl-en">console</span>.<span class="pl-c1">log</span>(
+    description <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">'</span> =<span class="pl-pds">'</span></span>, <span class="pl-smi">JSON</span>.<span class="pl-en">stringify</span>(triple, <span class="pl-c1">null</span>, <span class="pl-s"><span class="pl-pds">'</span>  <span class="pl-pds">'</span></span>);
+  );
+};
+
+<span class="pl-c1">print</span>( <span class="pl-s"><span class="pl-pds">'</span>user jack contacts user jill<span class="pl-pds">'</span></span>, <span class="pl-smi">nl3</span>.<span class="pl-c1">parse</span>(<span class="pl-s"><span class="pl-pds">'</span>user jack contacts user jill<span class="pl-pds">'</span></span>) );
+
+<span class="pl-c1">print</span>( <span class="pl-s"><span class="pl-pds">'</span>users who message user jill<span class="pl-pds">'</span></span>, <span class="pl-smi">nl3</span>.<span class="pl-c1">parse</span>(<span class="pl-s"><span class="pl-pds">'</span>users who message user jill<span class="pl-pds">'</span></span>) );
+</pre></div>
+
+<p><strong>returns:</strong></p>
+
+<div class="highlight highlight-source-js"><pre>
+user jack contacts user jill <span class="pl-k">=</span> {
+  <span class="pl-s"><span class="pl-pds">"</span>subject<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+    <span class="pl-s"><span class="pl-pds">"</span>type<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>user<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>value<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>jack<span class="pl-pds">"</span></span>
+
+  },
+  <span class="pl-s"><span class="pl-pds">"</span>predicate<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+    <span class="pl-s"><span class="pl-pds">"</span>value<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>message<span class="pl-pds">"</span></span>
+  },
+  <span class="pl-s"><span class="pl-pds">"</span>object<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+    <span class="pl-s"><span class="pl-pds">"</span>type<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>user<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>value<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>jill<span class="pl-pds">"</span></span>
+  }
+}
+users who message user jill <span class="pl-k">=</span> {
+  <span class="pl-s"><span class="pl-pds">"</span>subject<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+    <span class="pl-s"><span class="pl-pds">"</span>type<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>user<span class="pl-pds">"</span></span>
+  },
+  <span class="pl-s"><span class="pl-pds">"</span>predicate<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+    <span class="pl-s"><span class="pl-pds">"</span>value<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>message<span class="pl-pds">"</span></span>
+  },
+  <span class="pl-s"><span class="pl-pds">"</span>object<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+    <span class="pl-s"><span class="pl-pds">"</span>type<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>user<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>value<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>jill<span class="pl-pds">"</span></span>
+  }
+}
+</pre></div>
+
+<h3>
+<a id="vnext" class="anchor" href="#vnext" aria-hidden="true"><span class="octicon octicon-link"></span></a>vNext</h3>
+
+<p>Support for natural random order queries, these are not in (SPO) order, such as messages that user bob created (OSP), created messages by user jill (POS), created by user jill messages (PSO), (SO) user jills messages, (OS) messages for user jill.</p>
+
+<div class="highlight highlight-source-js"><pre>
+  <span class="pl-smi">nl3</span>.<span class="pl-c1">parse</span>(<span class="pl-s"><span class="pl-pds">'</span>users that follow user 42<span class="pl-pds">'</span></span>);
+  <span class="pl-smi">nl3</span>.<span class="pl-c1">parse</span>(<span class="pl-s"><span class="pl-pds">'</span>users followed by user 42<span class="pl-pds">'</span></span>);
+  <span class="pl-smi">nl3</span>.<span class="pl-c1">parse</span>(<span class="pl-s"><span class="pl-pds">'</span>messages from user 42<span class="pl-pds">'</span></span>);
+  <span class="pl-smi">nl3</span>.<span class="pl-c1">parse</span>(<span class="pl-s"><span class="pl-pds">'</span>messages by user 32<span class="pl-pds">'</span></span>);
+</pre></div>
+
+<h3>
+<a id="the-backlog" class="anchor" href="#the-backlog" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Backlog...</h3>
+
+<ul>
+<li>Support for misspelled subjects &amp; objects ( nearest neighbor )</li>
+</ul>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/defstream/nl3">Nl3</a> is maintained by <a href="https://github.com/defstream">defstream</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+            <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-32153623-2");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
