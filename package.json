@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "description": "nl3 - natural language triples",
   "license": "MIT",
-  "author": "Hector Gray <defstream@gmail.com> (https://github.com/defstream)",
+  "author": "Hector Gray <hgray@incredi.co> (https://github.com/defstream)",
   "main": "index.js",
   "scripts": {
     "doc": "jsdoc -R ./README.md -r -d ./doc/api ./lib ./index.js",

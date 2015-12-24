@@ -38,18 +38,18 @@ var nl3 = {
  * @return {Object}                     An instance of the nl3 client.
  */
 module.exports = function create(options) {
-  //@info triple rules engine
-  var engine = rules({
+  //@info triple rules
+  var tream = rules({
     //@info defined triples
-    grammar: options.grammar,
+    grammar: options.grammar || [],
     //@info an additional set of words that map to our items with our original grammar
-    vocabulary: options.vocabulary
+    vocabulary: options.vocabulary || {}
   });
   //@info create & return the new instance
   var instance = Object.create(nl3, {
     rules: {
       enumerable: true,
-      value: engine
+      value: tream
     }
   });
 
