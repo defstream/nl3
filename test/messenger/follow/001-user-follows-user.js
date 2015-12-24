@@ -7,22 +7,6 @@ var expect = require('chai').expect;
 var nl3 = require('../client')();
 var check = require('../../check.js');
 
-
-function print(description, triple) {
-  console.log(
-    description + ' =', JSON.stringify(triple, null, '  ')
-  );
-}
-
-print('user jack contacts user jill', nl3.parse('user jack contacts user jill'));
-
-print('users who message user jill', nl3.parse('users who message user jill'));
-
-console.log(
-  'users who message user jill',
-  nl3.parse('users who message user jill')
-);
-
 describe('users following users', function test() {
   var queries = [
     nl3.parse('users who follow user 42'),
