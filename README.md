@@ -91,7 +91,7 @@ $ npm install nl3 --save
 ```
 
 # Development Scripts
-Before runing any development scripts, be sure to first install the dev modules.
+Before running any development scripts, be sure to first install the dev modules.
 
 ```shell
 $ npm install nl3 --save --dev
