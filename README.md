@@ -118,6 +118,9 @@ Outputs code coverage files to the `./doc/coverage` folder.
 $ npm run test
 ```
 
+**CURRENT COVERAGE REPORT**
+<object type="image/svg+xml" data="https://codecov.io/github/defstream/nl3/branch.svg?branch=master"></object>
+
 # API
 
 ### `nl3(options)`
