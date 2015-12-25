@@ -119,7 +119,8 @@ $ npm run test
 ```
 
 **CURRENT COVERAGE REPORT**
-<object type="image/svg+xml" data="https://codecov.io/github/defstream/nl3/branch.svg?branch=master"></object>
+
+![codecov.io](https://codecov.io/github/defstream/nl3/branch.svg?branch=master)
 
 # API
 
