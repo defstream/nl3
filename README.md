@@ -26,6 +26,10 @@
   <a href="https://gitter.im/defstream/nl3"><img src="https://img.shields.io/gitter/room/defstream/nl3.svg"
      alt="Chat"></a>
 </p>
+<p align="center">
+  <img src="https://raw.github.com/defstream/nl3/master/package.json">
+</p>
+
 
 **nl3** is a natural language triple library, used for parsing triples from plain english.
 Currently nl3 is best at generating triples from  simple short phrases that contain the Subject, Predicate and Object in order.
@@ -241,5 +245,28 @@ Support for natural random order queries, these are not in (SPO) order, such as 
 
 ```
 
-### The Backlog...
+### The Backlog
 - Support for misspelled subjects & objects ( nearest neighbor )
+
+### Changelog
+See CHANGELOG.md
+
+### Discuss
+Chat channel:  Gitter
+Twitter: please use the #MarkoJS hashtag. Follow @MarkoDevTeam
+Questions or comments can also be posted on the Marko Github issues page.
+
+### Maintainers
+Hector Gray (Twitter: @defstream)
+
+### Contribute
+Pull Requests welcome. Please make sure all tests pass:
+
+```shell
+$ npm test
+```
+
+Please submit Github issues for any feature enhancements, bugs or documentation problems.
+
+License
+MIT
