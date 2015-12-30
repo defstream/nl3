@@ -27,7 +27,7 @@
      alt="Chat"></a>
 </p>
 <p align="center">
-  <img src="https://raw.github.com/defstream/nl3/master/package.json">
+  <img src="https://raw.github.com/defstream/nl3/master/logo.png">
 </p>
 
 
