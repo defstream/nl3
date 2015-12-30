@@ -1,6 +1,9 @@
 ## nl3 - Natural Language Triples
 
 <p align="center">
+  <a href="http://npmjs.com/package/nl3"><img src="https://img.shields.io/npm/v/nl3.svg"
+     alt="npm version"></a>
+
   <a href="https://gemnasium.com/defstream/nl3"><img src="https://img.shields.io/gemnasium/defstream/nl3.svg"
        alt="Gemnasium"></a>
 
@@ -13,8 +16,10 @@
   <a href="https://circleci.com/gh/defstream/nl3"><img src="https://img.shields.io/circleci/project/defstream/nl3.svg"
        alt="coverage"></a>
 
-   <a href="http://npmjs.com/package/nl3"><img src="https://img.shields.io/npm/v/nl3.svg"
-        alt="npm version"></a>
+  <a href="https://snyk.io/test/npm/nl3"><img src="https://snyk.io/test/npm/nl3/badge.svg" alt="Known Vulnerabilities"></a>
+
+  <a href="http://npm-stat.com/charts.html?package=nl3"><img src="https://img.shields.io/npm/dm/nl3.svg" alt="downloads"></a>
+
 </p>
 
 <p align="center">
