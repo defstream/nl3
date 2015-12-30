@@ -253,7 +253,7 @@ Chat channel:    <a href="https://gitter.im/defstream/nl3"><img src="https://img
 
 Twitter: Follow <a href="https://twitter.com/defstream">@defstream</a>
 
-Questions or comments can also be posted on the work.flow Github issues page.
+Questions or comments can also be posted on the nl3 Github issues page.
 
 ### Maintainers
 Hector Gray (Twitter: @defstream)
