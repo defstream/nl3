@@ -267,5 +267,5 @@ $ npm test
 
 Please submit Github issues for any feature enhancements, bugs or documentation problems.
 
-License
+### License
 MIT
