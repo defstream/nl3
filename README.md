@@ -249,8 +249,9 @@ Support for natural random order queries, these are not in (SPO) order, such as 
 - Support for misspelled subjects & objects ( nearest neighbor )
 
 ### Discuss
-Chat channel:  Gitter
-Twitter: Follow @defstream
+Chat channel:    <a href="https://gitter.im/defstream/nl3"><img src="https://img.shields.io/gitter/room/defstream/nl3.svg" alt="Chat"></a>
+
+Twitter: Follow <a href="https://twitter.com/defstream">@defstream</a>
 
 Questions or comments can also be posted on the work.flow Github issues page.
 
