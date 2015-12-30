@@ -248,9 +248,6 @@ Support for natural random order queries, these are not in (SPO) order, such as 
 ### The Backlog
 - Support for misspelled subjects & objects ( nearest neighbor )
 
-### Changelog
-See CHANGELOG.md
-
 ### Discuss
 Chat channel:  Gitter
 Twitter: Follow @defstream
