@@ -251,12 +251,10 @@ Support for natural random order queries, these are not in (SPO) order, such as 
 ### Discuss
 Chat channel:    <a href="https://gitter.im/defstream/nl3"><img src="https://img.shields.io/gitter/room/defstream/nl3.svg" alt="Chat"></a>
 
-Twitter: Follow <a href="https://twitter.com/defstream">@defstream</a>
-
 Questions or comments can also be posted on the nl3 Github issues page.
 
 ### Maintainers
-Hector Gray (Twitter: @defstream)
+Hector Gray (Twitter: <a href="https://twitter.com/defstream">@defstream</a>)
 
 ### Contribute
 Pull Requests welcome. Please make sure all tests pass:
