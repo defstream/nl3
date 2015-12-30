@@ -251,6 +251,7 @@ Support for natural random order queries, these are not in (SPO) order, such as 
 ### Discuss
 Chat channel:  Gitter
 Twitter: Follow @defstream
+
 Questions or comments can also be posted on the work.flow Github issues page.
 
 ### Maintainers
