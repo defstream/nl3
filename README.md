@@ -263,7 +263,7 @@ Pull Requests welcome. Please make sure all tests pass:
 $ npm test
 ```
 
-Please submit <a href="https://github.com/defstream/work.flow/issues">Github issues</a> for any feature enhancements, bugs or documentation problems.
+Please submit <a href="https://github.com/defstream/nl3/issues">Github issues</a> for any feature enhancements, bugs or documentation problems.
 
 ### License
 MIT
