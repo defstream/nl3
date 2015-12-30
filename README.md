@@ -253,8 +253,8 @@ See CHANGELOG.md
 
 ### Discuss
 Chat channel:  Gitter
-Twitter: please use the #MarkoJS hashtag. Follow @MarkoDevTeam
-Questions or comments can also be posted on the Marko Github issues page.
+Twitter: Follow @defstream
+Questions or comments can also be posted on the work.flow Github issues page.
 
 ### Maintainers
 Hector Gray (Twitter: @defstream)
