@@ -39,8 +39,9 @@
   "dependencies": {
     "natural": "0.2.1",
     "neo-async": "1.7.1",
-    "speakeasy-nlp": "0.2.2",
-    "snyk": "^1.8.3"
+    "pos": "^0.3.0",
+    "snyk": "^1.8.3",
+    "speakeasy-nlp": "0.2.2"
   },
   "devDependencies": {
     "chai": "3.4.1",
