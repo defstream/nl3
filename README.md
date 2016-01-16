@@ -238,8 +238,6 @@ Support for natural random order queries, these are not in (SPO) order, such as 
 
 ```javascript
 
-  nl3.parse('users that follow user 42');
-  nl3.parse('users followed by user 42');
   nl3.parse('messages from user 42');
   nl3.parse('messages by user 32');
 

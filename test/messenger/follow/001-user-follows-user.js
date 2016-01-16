@@ -9,6 +9,7 @@ var check = require('../../check.js');
 
 describe('users following users', function test() {
   var queries = [
+    nl3.parse('users that follow user 42'),
     nl3.parse('users who follow user 42'),
     nl3.parse('users following user 42'),
     nl3.parse('users followed user 42'),
@@ -17,9 +18,9 @@ describe('users following users', function test() {
     nl3.parse('users who stalk user 42'),
     nl3.parse('users which stalk user 42'),
     nl3.parse('users watching user 42'),
-    nl3.parse('users who watch user 42')
+    nl3.parse('users who watch user 42'),
+    nl3.parse('users followed by user 42')
   ];
-
   check(queries).against({
     subject: {
       type: 'user',

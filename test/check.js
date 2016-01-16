@@ -7,7 +7,6 @@ var mocha = require('mocha');
 var expect = require('chai').expect;
 
 function test(triple, expected) {
-
   it('should have subject.type equal to ' + expected.subject.type, function(
     done) {
     expect(triple.subject.type).to.equal(expected.subject.type);
