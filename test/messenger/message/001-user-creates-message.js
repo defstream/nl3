@@ -7,12 +7,7 @@ var nl3 = new require('../client')();
 var check = require('../../check.js');
 
 describe('users create messages', function() {
-  console.log(
-    nl3.parse('users that follow user 42'),
-    nl3.parse('users followed by user 42'),
-    nl3.parse('messages from user 42'),
-    nl3.parse('messages by user 32')
-  )
+
   var queries = [
     nl3.parse('user bob creates message 42'),
     nl3.parse('user bob created message 42'),
