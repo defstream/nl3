@@ -37,6 +37,7 @@
     "javascript"
   ],
   "dependencies": {
+    "istanbul": "^0.4.3",
     "mocha": "2.4.5",
     "neo-async": "1.8.2",
     "pluralize": "1.2.1",
