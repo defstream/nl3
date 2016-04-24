@@ -40,7 +40,7 @@
     "natural": "0.2.1",
     "pos": "0.3.0",
     "snyk": "1.8.3",
-    "neo-async": "1.7.2",
+    "neo-async": "1.7.4",
     "speakeasy-nlp": "0.2.2"
   },
   "devDependencies": {
