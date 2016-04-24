@@ -39,7 +39,7 @@
   "dependencies": {
     "natural": "0.2.1",
     "pos": "0.3.0",
-    "snyk": "1.8.3",
+    "snyk": "1.9.2",
     "neo-async": "1.7.2",
     "speakeasy-nlp": "0.2.2"
   },
