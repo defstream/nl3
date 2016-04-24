@@ -37,23 +37,19 @@
     "javascript"
   ],
   "dependencies": {
-    "codecov": "^1.0.1",
-    "istanbul": "^0.4.3",
-    "mocha": "2.4.5",
     "neo-async": "1.8.2",
-    "plato": "^1.5.0",
     "pluralize": "1.2.1",
     "pos": "0.3.0",
     "speakeasy-nlp": "0.2.2",
     "stemmer": "0.1.4"
   },
   "devDependencies": {
-    "chai": "3.4.1",
+    "chai": "3.5.0",
     "snyk": "1.14.1",
     "codecov": "1.0.1",
-    "istanbul": "0.4.1",
+    "istanbul": "0.4.3",
     "jsdoc": "3.4.0",
-    "mocha": "2.3.4",
+    "mocha": "2.4.5",
     "plato": "1.5.0"
   }
 }
