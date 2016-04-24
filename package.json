@@ -37,6 +37,7 @@
     "javascript"
   ],
   "dependencies": {
+    "codecov": "^1.0.1",
     "istanbul": "^0.4.3",
     "mocha": "2.4.5",
     "neo-async": "1.8.2",
