@@ -6,7 +6,7 @@
   "author": "Hector Gray <hgray@incredi.co> (https://github.com/defstream)",
   "main": "index.js",
   "engines": {
-    "node": ">=0.10"
+    "node": ">= 4"
   },
   "scripts": {
     "doc": "jsdoc -R ./README.md -r -d ./doc/api ./lib ./index.js",
