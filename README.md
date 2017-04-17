@@ -1,5 +1,7 @@
 ## nl3 - Natural Language Triples
 
+[![Join the chat at https://gitter.im/defstream/nl3](https://badges.gitter.im/defstream/nl3.svg)](https://gitter.im/defstream/nl3?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 <p align="center">
   <a href="http://npmjs.com/package/nl3"><img src="https://img.shields.io/npm/v/nl3.svg"
      alt="npm version"></a>
