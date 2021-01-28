@@ -40,7 +40,7 @@
     "neo-async": "1.8.2",
     "pluralize": "1.2.1",
     "pos": "0.3.0",
-    "speakeasy-nlp": "0.2.2",
+    "speakeasy-nlp": "0.2.13",
     "stemmer": "0.1.4"
   },
   "devDependencies": {
