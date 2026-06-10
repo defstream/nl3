@@ -7,22 +7,35 @@ export interface FoundPredicate {
 }
 
 /**
- * Finds the first predicate in the tagged tokens.
+ * Finds the first predicate in the tagged tokens in a single pass.
  *
  * Verb-tagged tokens are preferred so that object-first phrases like
  * 'message 32 created user bob' resolve 'created' rather than the noun
- * 'message' (whose stem is also a vocabulary key). When no verb matches —
- * e.g. 'msg' is tagged NN — fall back to scanning every token in order,
- * which preserves the legacy behavior.
+ * 'message' (whose stem is also a vocabulary key).
+ *
+ * Previous implementation did two full linear scans (verb-only, then any).
+ * This version tracks the first verb match and the first non-verb match
+ * simultaneously, returning the verb match if one exists and the non-verb
+ * match otherwise — all in one pass.
  */
 export function firstPredicate(
   parts: TaggedToken[],
   vocabulary: Vocabulary,
 ): FoundPredicate | undefined {
-  return (
-    scan(parts, vocabulary, (tag) => tag.startsWith('V')) ??
-    scan(parts, vocabulary)
-  );
+  let firstAny: FoundPredicate | undefined;
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i];
+    if (!part) continue;
+    const value = mapPredicate(part[0], vocabulary);
+    if (!value) continue;
+    if (part[1].startsWith('V')) {
+      // Verb match: this is the preferred result, return immediately.
+      return { index: i, value };
+    }
+    // Non-verb match: remember the first one but keep scanning for a verb.
+    firstAny ??= { index: i, value };
+  }
+  return firstAny;
 }
 
 /** Finds the last predicate in the tagged tokens, scanning from the end. */
@@ -31,41 +44,10 @@ export function lastPredicate(
   vocabulary: Vocabulary,
 ): FoundPredicate | undefined {
   for (let i = parts.length - 1; i > -1; i -= 1) {
-    const found = matchAt(parts, i, vocabulary);
-    if (found) {
-      return found;
-    }
-  }
-  return undefined;
-}
-
-function scan(
-  parts: TaggedToken[],
-  vocabulary: Vocabulary,
-  tagFilter?: (tag: string) => boolean,
-): FoundPredicate | undefined {
-  for (let i = 0; i < parts.length; i += 1) {
     const part = parts[i];
-    if (!part || (tagFilter && !tagFilter(part[1]))) {
-      continue;
-    }
-    const found = matchAt(parts, i, vocabulary);
-    if (found) {
-      return found;
-    }
+    if (!part) continue;
+    const value = mapPredicate(part[0], vocabulary);
+    if (value) return { index: i, value };
   }
   return undefined;
-}
-
-function matchAt(
-  parts: TaggedToken[],
-  index: number,
-  vocabulary: Vocabulary,
-): FoundPredicate | undefined {
-  const part = parts[index];
-  if (!part) {
-    return undefined;
-  }
-  const value = mapPredicate(part[0], vocabulary);
-  return value ? { index, value } : undefined;
 }

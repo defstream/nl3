@@ -52,8 +52,8 @@ export function flipTriple(
  * Fills in missing subject/object types by inferring them from the grammar
  * rules based on the matched predicate value.
  *
- * Uses the pre-computed lookup maps in the Ruleset for O(1) access instead
- * of linear scans over all entries.
+ * Uses objectLookup (a nested Map) for zero-allocation O(1) access — no
+ * template-literal key strings are built on the hot parse path.
  */
 export function inferTypes(
   triple: Triple,
@@ -74,10 +74,10 @@ export function inferTypes(
     subjectType = pick(predicate, candidates, ambiguity);
   }
 
-  // Object type: look up valid object types for (subject, predicate).
+  // Object type: two Map.get() calls — no string allocation.
   if (objectType === undefined && subjectType !== undefined) {
-    const key = `${subjectType}\x00${predicate}`;
-    const candidates = rules.objectsBySubjectPredicate[key] ?? [];
+    const candidates =
+      rules.objectLookup.get(subjectType)?.get(predicate)?.candidates ?? [];
     objectType = pick(predicate, candidates, ambiguity);
   }
 
@@ -90,7 +90,8 @@ export function inferTypes(
 
   return {
     subject: { ...triple.subject, type: subjectType },
-    predicate: { ...triple.predicate },
+    // predicate is never mutated — reuse the reference, no spread needed.
+    predicate: triple.predicate,
     object: { ...triple.object, type: objectType },
   };
 }
@@ -115,6 +116,10 @@ function pick(
   );
 }
 
+/**
+ * Returns true when the triple is valid under the grammar.
+ * Uses objectLookup for two Map.get() + Set.has() — no string allocation.
+ */
 function abides(triple: Triple, rules: Ruleset): boolean {
   const { type: subjectType } = triple.subject;
   const { value: predicateValue } = triple.predicate;
@@ -122,6 +127,10 @@ function abides(triple: Triple, rules: Ruleset): boolean {
   if (!subjectType || !predicateValue || objectType === undefined) {
     return false;
   }
-  const key = `${subjectType}\x00${predicateValue}`;
-  return rules.objectSetsBySubjectPredicate[key]?.has(objectType) ?? false;
+  return (
+    rules.objectLookup
+      .get(subjectType)
+      ?.get(predicateValue)
+      ?.set.has(objectType) ?? false
+  );
 }

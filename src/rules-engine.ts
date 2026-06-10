@@ -28,13 +28,29 @@ export interface Ruleset {
   entries: GrammarRule[];
   /** Maps predicate → ordered-unique subject types (for fast inferTypes lookup). */
   subjectsByPredicate: Record<string, string[]>;
-  /** Maps `subject\x00predicate` → ordered-unique object types (for fast inferTypes lookup). */
+  /**
+   * @deprecated Use objectLookup for zero-allocation access.
+   * Maps `subject\x00predicate` → ordered-unique object types.
+   */
   objectsBySubjectPredicate: Record<string, string[]>;
   /**
+   * @deprecated Use objectLookup for zero-allocation access.
    * Maps `subject\x00predicate` → Set of valid object types.
-   * Used by abides() for O(1) membership checks on the hot parse path.
    */
   objectSetsBySubjectPredicate: Record<string, Set<string>>;
+  /**
+   * Nested Map for all object-related lookups on the hot parse path.
+   * Eliminates template-literal key construction at parse time.
+   *
+   * Map<subjectType, Map<predicate, { candidates: string[]; set: Set<string> }>>
+   *
+   * - `candidates`: ordered-unique object types (for inferTypes)
+   * - `set`: same values as a Set (for O(1) abides() membership test)
+   */
+  objectLookup: Map<
+    string,
+    Map<string, { candidates: string[]; set: Set<string> }>
+  >;
 }
 
 /**
@@ -54,6 +70,7 @@ export function buildRuleset(
     subjectsByPredicate: {},
     objectsBySubjectPredicate: {},
     objectSetsBySubjectPredicate: {},
+    objectLookup: new Map(),
   };
 
   // Use Sets during construction to avoid O(n) includes checks; convert to
@@ -110,6 +127,21 @@ export function buildRuleset(
       objectsBySubjectPredicateSets.set(spKey, new Set());
     }
     objectsBySubjectPredicateSets.get(spKey)!.add(object);
+
+    // nested objectLookup: no string building needed at parse time
+    let predicateMap = ruleset.objectLookup.get(subject);
+    if (!predicateMap) {
+      predicateMap = new Map();
+      ruleset.objectLookup.set(subject, predicateMap);
+    }
+    if (!predicateMap.has(predicate)) {
+      predicateMap.set(predicate, { candidates: [], set: new Set() });
+    }
+    const entry = predicateMap.get(predicate)!;
+    if (!entry.set.has(object)) {
+      entry.candidates.push(object);
+      entry.set.add(object);
+    }
   }
 
   // Materialise Sets → arrays

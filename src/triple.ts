@@ -21,16 +21,19 @@ export function extractParts(
   classification: Classification,
   rules: Ruleset,
 ): TripleParts {
-  const predicate = firstPredicate(classification.parts, rules.vocabulary);
-  const before = predicate
-    ? classification.parts.slice(0, predicate.index)
-    : [];
-  const after = predicate
-    ? classification.parts.slice(predicate.index + 1)
-    : [];
+  const parts = classification.parts;
+  const predicate = firstPredicate(parts, rules.vocabulary);
+  if (!predicate) {
+    return {
+      subjects: emptyParts(),
+      objects: emptyParts(),
+      predicate: undefined,
+    };
+  }
+  // Pass index ranges instead of slicing — eliminates two array allocations.
   return {
-    subjects: reduceParts(before, rules),
-    objects: reduceParts(after, rules),
+    subjects: reduceParts(parts, 0, predicate.index, rules),
+    objects: reduceParts(parts, predicate.index + 1, parts.length, rules),
     predicate,
   };
 }
@@ -63,17 +66,26 @@ export function buildTriple(
  * everything else (except prepositions and wh-words) as candidate values —
  * split into those seen before any type token and those seen after.
  *
+ * Operates over a [start, end) slice of the token array without allocating
+ * a new array — avoids the two .slice() calls previously in extractParts.
+ *
  * Singularize is only called when the raw token doesn't already match a known
  * type, avoiding unnecessary work for numeric values and proper nouns.
  */
-function reduceParts(tokens: TaggedToken[], rules: Ruleset): ReducedParts {
+function reduceParts(
+  tokens: TaggedToken[],
+  start: number,
+  end: number,
+  rules: Ruleset,
+): ReducedParts {
   const result: ReducedParts = {
     subjects: [],
     objects: [],
     before: [],
     after: [],
   };
-  for (const part of tokens) {
+  for (let i = start; i < end; i++) {
+    const part = tokens[i]!;
     const raw = part[0];
     // Fast path: check raw token before paying the singularize cost.
     const normalized =
@@ -105,4 +117,8 @@ function firstValue(parts: ReducedParts): string | undefined {
   // after tokens are preferred (they follow the type keyword); fall back to
   // before tokens for bare phrases like 'jack contacts jill'.
   return (parts.after[0] ?? parts.before[0])?.[0];
+}
+
+function emptyParts(): ReducedParts {
+  return { subjects: [], objects: [], before: [], after: [] };
 }
