@@ -31,3 +31,5 @@
 - `pluralize` 1.x → 8.x, `stemmer` 0.x → 2.x.
 - Tooling: Mocha/Chai/Istanbul/JSLint/Plato/Snyk/JSDoc replaced by
   Vitest, ESLint + typescript-eslint, Prettier and GitHub Actions CI.
+- Makefile with developer targets (`make help` lists them; `make check`
+  mirrors CI).

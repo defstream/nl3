@@ -125,6 +125,19 @@ try {
 
 ## Development
 
+A Makefile wraps the npm scripts — run `make help` to list all targets:
+
+```shell
+make install   # install dependencies (npm ci)
+make test      # run the test suite
+make coverage  # tests + coverage report
+make lint      # eslint
+make build     # compile TypeScript to dist/
+make check     # everything CI runs: lint, format, build, tests+coverage
+```
+
+Prefer npm directly? The same tasks exist as scripts:
+
 ```shell
 npm install
 npm test              # run the test suite
@@ -146,7 +159,7 @@ Hector Gray (Twitter: [@defstream](https://twitter.com/defstream))
 Pull requests welcome. Please make sure all tests pass:
 
 ```shell
-npm test
+make check
 ```
 
 Please submit [GitHub issues](https://github.com/defstream/nl3/issues) for any
