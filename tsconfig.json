@@ -9,10 +9,7 @@
     "skipLibCheck": true,
     "types": ["node"],
     "forceConsistentCasingInFileNames": true,
-    "declaration": true,
-    "sourceMap": true,
-    "outDir": "dist",
-    "rootDir": "src"
+    "noEmit": true
   },
-  "include": ["src"]
+  "include": ["src", "test", "bench", "vitest.config.ts"]
 }

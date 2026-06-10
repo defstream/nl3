@@ -2,7 +2,7 @@
 
 .DEFAULT_GOAL := help
 
-.PHONY: help install build clean lint lint-fix format format-check test test-watch coverage check pack
+.PHONY: help install build clean lint lint-fix format format-check typecheck test test-watch coverage bench check pack
 
 help: ## Show this help
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  \033[36m%-14s\033[0m %s\n", $$1, $$2}'
@@ -29,6 +29,9 @@ format: ## Format all files with Prettier
 format-check: ## Check formatting without writing
 	npm run format:check
 
+typecheck: ## Type-check all sources including tests
+	npm run typecheck
+
 test: ## Run the test suite once
 	npm test
 
@@ -38,7 +41,10 @@ test-watch: ## Run tests in watch mode
 coverage: ## Run tests with coverage report
 	npm run test:coverage
 
-check: lint format-check build coverage ## Everything CI runs: lint, format, build, tests+coverage
+bench: ## Run the benchmark suite
+	npm run bench
+
+check: lint format-check typecheck build coverage ## Everything CI runs: lint, format, typecheck, build, tests+coverage
 
 pack: build ## Build and preview the npm tarball contents
 	npm pack --dry-run
