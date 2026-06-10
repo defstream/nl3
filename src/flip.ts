@@ -42,7 +42,6 @@ export function flipTriple(
   return {
     subject: triple.object,
     predicate: {
-      type: undefined,
       value: last?.value ?? triple.predicate.value,
     },
     object: triple.subject,
@@ -117,14 +116,12 @@ function pick(
 }
 
 function abides(triple: Triple, rules: Ruleset): boolean {
-  const subject = triple.subject.type
-    ? rules.subjects[triple.subject.type]
-    : undefined;
-  const predicate = triple.predicate.value
-    ? subject?.predicates[triple.predicate.value]
-    : undefined;
-  return (
-    triple.object.type !== undefined &&
-    (predicate?.objects.includes(triple.object.type) ?? false)
-  );
+  const { type: subjectType } = triple.subject;
+  const { value: predicateValue } = triple.predicate;
+  const { type: objectType } = triple.object;
+  if (!subjectType || !predicateValue || objectType === undefined) {
+    return false;
+  }
+  const key = `${subjectType}\x00${predicateValue}`;
+  return rules.objectSetsBySubjectPredicate[key]?.has(objectType) ?? false;
 }

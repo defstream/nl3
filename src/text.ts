@@ -2,9 +2,23 @@ import pluralize from 'pluralize';
 import { stemmer } from 'stemmer';
 import type { Vocabulary } from './types.js';
 
+// Singularize is pure and called for every token on every parse.
+// A bounded LRU cache eliminates repeated work for common words.
+const singularizeCache = new Map<string, string>();
+const SINGULARIZE_CACHE_LIMIT = 5_000;
+
 /** 'cats' -> 'cat'. Returns input unchanged when empty or already singular. */
 export function singularize(text: string): string {
-  return text ? pluralize.singular(text) : text;
+  if (!text) return text;
+  let result = singularizeCache.get(text);
+  if (result === undefined) {
+    result = pluralize.singular(text);
+    if (singularizeCache.size >= SINGULARIZE_CACHE_LIMIT) {
+      singularizeCache.delete(singularizeCache.keys().next().value as string);
+    }
+    singularizeCache.set(text, result);
+  }
+  return result;
 }
 
 // Stemming is pure, and firstPredicate's two-pass scan can stem the same

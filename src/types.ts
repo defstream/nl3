@@ -1,7 +1,7 @@
 /** One corner of a triple: an optional type (e.g. 'user') and value (e.g. 'bob'). */
 export interface TriplePart {
-  type?: string;
-  value?: string;
+  type?: string | undefined;
+  value?: string | undefined;
 }
 
 /** A Subject–Predicate–Object triple parsed from plain English. */
@@ -32,10 +32,10 @@ export interface Tagger {
 export type AmbiguityPolicy = 'first-match' | 'error';
 
 export interface Nl3Options {
-  grammar?: Grammar;
-  vocabulary?: Vocabulary;
-  tagger?: Tagger;
-  ambiguity?: AmbiguityPolicy;
+  grammar?: Grammar | undefined;
+  vocabulary?: Vocabulary | undefined;
+  tagger?: Tagger | undefined;
+  ambiguity?: AmbiguityPolicy | undefined;
 }
 
 /** A token and its Penn Treebank part-of-speech tag, e.g. ['follow', 'VB']. */

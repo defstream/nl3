@@ -47,7 +47,6 @@ export function buildTriple(
       value: firstValue(parts.subjects),
     },
     predicate: {
-      type: undefined,
       value: parts.predicate?.value,
     },
     object: {

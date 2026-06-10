@@ -15,6 +15,13 @@ function loadTagger(): WinkTagger {
   return factory();
 }
 
+// POS tagging is the most expensive step and is deterministic for a given
+// input string. Cache results when using the default tagger so that repeated
+// parses of the same phrase are essentially free.
+// Custom taggers are NOT cached here — their output may depend on external state.
+const classifyCache = new Map<string, Classification>();
+const CLASSIFY_CACHE_LIMIT = 1_000;
+
 /**
  * Tokenizes and part-of-speech tags text into [word, tag] tuples.
  * Punctuation tokens are excluded; the rules engine only consumes words/numbers.
@@ -25,14 +32,28 @@ export function classify(
 ): Classification {
   const trimmed = text.trim();
   let parts: TaggedToken[];
+
   if (taggerOverride) {
+    // Custom taggers bypass the cache — their behaviour is opaque.
     parts = taggerOverride.tag(trimmed);
-  } else {
-    taggerLazy ??= loadTagger();
-    parts = taggerLazy
-      .tagSentence(trimmed)
-      .filter((token) => token.tag !== 'punctuation')
-      .map((token) => [token.value, token.pos]);
+    return { parts, text: trimmed };
   }
-  return { parts, text: trimmed };
+
+  const cached = classifyCache.get(trimmed);
+  if (cached) {
+    return cached;
+  }
+
+  taggerLazy ??= loadTagger();
+  parts = taggerLazy
+    .tagSentence(trimmed)
+    .filter((token) => token.tag !== 'punctuation')
+    .map((token) => [token.value, token.pos]);
+
+  const result: Classification = { parts, text: trimmed };
+  if (classifyCache.size >= CLASSIFY_CACHE_LIMIT) {
+    classifyCache.delete(classifyCache.keys().next().value as string);
+  }
+  classifyCache.set(trimmed, result);
+  return result;
 }

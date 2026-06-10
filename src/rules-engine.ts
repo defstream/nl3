@@ -21,11 +21,20 @@ export interface Ruleset {
   predicates: string[];
   objects: Record<string, ObjectRule>;
   vocabulary: Vocabulary;
+  /**
+   * @deprecated No longer used internally. Kept for backwards-compatibility only.
+   * Will be removed in the next major version.
+   */
   entries: GrammarRule[];
   /** Maps predicate → ordered-unique subject types (for fast inferTypes lookup). */
   subjectsByPredicate: Record<string, string[]>;
   /** Maps `subject\x00predicate` → ordered-unique object types (for fast inferTypes lookup). */
   objectsBySubjectPredicate: Record<string, string[]>;
+  /**
+   * Maps `subject\x00predicate` → Set of valid object types.
+   * Used by abides() for O(1) membership checks on the hot parse path.
+   */
+  objectSetsBySubjectPredicate: Record<string, Set<string>>;
 }
 
 /**
@@ -44,6 +53,7 @@ export function buildRuleset(
     entries: [],
     subjectsByPredicate: {},
     objectsBySubjectPredicate: {},
+    objectSetsBySubjectPredicate: {},
   };
 
   // Use Sets during construction to avoid O(n) includes checks; convert to
@@ -121,6 +131,8 @@ export function buildRuleset(
   }
   for (const [key, set] of objectsBySubjectPredicateSets) {
     ruleset.objectsBySubjectPredicate[key] = [...set];
+    // Reuse the same Set for O(1) membership checks in abides().
+    ruleset.objectSetsBySubjectPredicate[key] = set;
   }
 
   return ruleset;
