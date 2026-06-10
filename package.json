@@ -19,7 +19,8 @@
   },
   "files": [
     "dist",
-    "logo.png"
+    "logo.png",
+    "CHANGELOG.md"
   ],
   "engines": {
     "node": ">=20"
