@@ -109,7 +109,8 @@ interface Triple {
 ```
 
 Throws `Nl3ParseError` when the input is not a non-empty string or when the phrase
-cannot form a valid triple under the configured grammar.
+cannot form a valid triple under the configured grammar. The error carries the
+offending `input` and, when extraction got that far, the invalid `candidate` triple:
 
 ```ts
 import nl3, { Nl3ParseError } from 'nl3';
@@ -118,10 +119,17 @@ try {
   client.parse('dog jim hates cat sue');
 } catch (error) {
   if (error instanceof Nl3ParseError) {
-    // not part of the grammar
+    error.input; // 'dog jim hates cat sue'
+    error.candidate; // the rejected triple, if one was extracted
   }
 }
 ```
+
+## Performance
+
+Importing nl3 is cheap (~10 ms); the part-of-speech lexicon (~130 ms) loads
+lazily on the first `parse()` call. Parsing itself runs at roughly 60–90k
+phrases/sec on modern hardware — see `make bench`.
 
 ## Development
 
@@ -130,10 +138,12 @@ A Makefile wraps the npm scripts — run `make help` to list all targets:
 ```shell
 make install   # install dependencies (npm ci)
 make test      # run the test suite
-make coverage  # tests + coverage report
-make lint      # eslint
+make coverage  # tests + coverage report (thresholds enforced)
+make lint      # eslint (type-aware)
+make typecheck # type-check all sources including tests
 make build     # compile TypeScript to dist/
-make check     # everything CI runs: lint, format, build, tests+coverage
+make bench     # run the benchmark suite
+make check     # everything CI runs: lint, format, typecheck, build, tests+coverage
 ```
 
 Prefer npm directly? The same tasks exist as scripts:

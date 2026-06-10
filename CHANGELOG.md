@@ -1,5 +1,30 @@
 # Changelog
 
+## Unreleased
+
+### Features
+
+- `Nl3ParseError` now exposes `input` (the value passed to `parse()`) and
+  `candidate` (the rejected triple, when extraction got that far).
+
+### Performance
+
+- The part-of-speech lexicon (~130ms) now loads lazily on first `parse()`;
+  importing nl3 dropped from ~140ms to ~10ms. The package is also marked
+  `sideEffects: false` for bundler tree-shaking.
+- A bounded stem cache speeds up parsing 12–32% and invalid-phrase rejection
+  ~89% (measured with the new `make bench` suite).
+
+### Tooling
+
+- Tests are now type-checked (`npm run typecheck` covers `src`, `test` and
+  `bench`); ESLint runs type-aware rules; coverage thresholds are enforced
+  (95% lines / 100% functions / 90% branches).
+- Property-based tests with fast-check.
+- CI hardening: actions pinned to commit SHAs, concurrency cancellation,
+  CodeQL scanning, Dependabot updates, and release-please automation with
+  npm provenance publishing.
+
 ## 1.0.0 (2026-06-09)
 
 ### Breaking changes
