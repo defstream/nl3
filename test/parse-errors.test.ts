@@ -31,3 +31,32 @@ describe('invalid parse parameters', () => {
     expect(() => client.parse('user Aaron messaged user Micah')).not.toThrow();
   });
 });
+
+describe('Nl3ParseError structure', () => {
+  function catchError(input: unknown): Nl3ParseError {
+    try {
+      client.parse(input as string);
+    } catch (error) {
+      if (error instanceof Nl3ParseError) {
+        return error;
+      }
+    }
+    throw new Error('expected client.parse to throw Nl3ParseError');
+  }
+
+  it('carries the offending input for invalid arguments', () => {
+    expect(catchError(42).input).toBe(42);
+    expect(catchError(' ').input).toBe(' ');
+    expect(catchError(undefined).input).toBeUndefined();
+  });
+
+  it('carries the input and candidate triple for unparseable phrases', () => {
+    const error = catchError('dog jim hates cat sue');
+    expect(error.input).toBe('dog jim hates cat sue');
+    expect(error.candidate).toEqual({
+      subject: { type: undefined, value: undefined },
+      predicate: { type: undefined, value: undefined },
+      object: { type: undefined, value: undefined },
+    });
+  });
+});

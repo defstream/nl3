@@ -22,6 +22,7 @@ export function processTriple(
   }
   throw new Nl3ParseError(
     `Invalid triple:\n${JSON.stringify(triple, null, ' ')}`,
+    { input: classification.text, candidate: triple },
   );
 }
 

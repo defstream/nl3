@@ -33,4 +33,21 @@ export interface Classification {
 /** Thrown when text cannot be parsed into a valid triple. */
 export class Nl3ParseError extends Error {
   override name = 'Nl3ParseError';
+
+  /** The value passed to parse(). Not necessarily a string — that may be the problem. */
+  readonly input: unknown;
+
+  /** The (invalid) triple extracted from the text, when extraction got that far. */
+  readonly candidate?: Triple;
+
+  constructor(
+    message: string,
+    details: { input?: unknown; candidate?: Triple } = {},
+  ) {
+    super(message);
+    this.input = details.input;
+    if (details.candidate) {
+      this.candidate = details.candidate;
+    }
+  }
 }

@@ -13,6 +13,7 @@ export function parseText(text: unknown, rules: Ruleset): Triple {
   if (typeof text !== 'string' || !text.trim()) {
     throw new Nl3ParseError(
       `The supplied text could not be parsed into a triple. value: ${String(text)}`,
+      { input: text },
     );
   }
   const classification = classify(text);
