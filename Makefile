@@ -2,7 +2,8 @@
 
 .DEFAULT_GOAL := help
 
-.PHONY: help install build clean lint lint-fix format format-check typecheck test test-watch coverage bench check pack
+.PHONY: help install build clean lint lint-fix format format-check typecheck test test-watch coverage bench check pack \
+        examples example-basic example-ambiguity example-adventure example-messenger example-custom-tagger
 
 help: ## Show this help
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  \033[36m%-14s\033[0m %s\n", $$1, $$2}'
@@ -48,3 +49,20 @@ check: lint format-check typecheck build coverage ## Everything CI runs: lint, f
 
 pack: build ## Build and preview the npm tarball contents
 	npm pack --dry-run
+
+example-basic: build ## Run examples/basic.js
+	node examples/basic.js
+
+example-ambiguity: build ## Run examples/ambiguity.js
+	node examples/ambiguity.js
+
+example-adventure: build ## Run examples/adventure.js
+	node examples/adventure.js
+
+example-messenger: build ## Run examples/messenger.js
+	node examples/messenger.js
+
+example-custom-tagger: build ## Run examples/custom_tagger.js
+	node examples/custom_tagger.js
+
+examples: example-basic example-ambiguity example-adventure example-messenger example-custom-tagger ## Run all examples

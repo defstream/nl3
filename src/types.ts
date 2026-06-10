@@ -17,9 +17,16 @@ export type Grammar = string[];
 /** Maps a word stem (e.g. 'msg') to a predicate defined in the grammar (e.g. 'message'). */
 export type Vocabulary = Record<string, string>;
 
+/** A custom part-of-speech tagger interface. */
+export interface Tagger {
+  tag(text: string): TaggedToken[];
+}
+
 export interface Nl3Options {
   grammar?: Grammar;
   vocabulary?: Vocabulary;
+  tagger?: Tagger;
+  ambiguity?: 'first-match' | 'error';
 }
 
 /** A token and its Penn Treebank part-of-speech tag, e.g. ['follow', 'VB']. */
@@ -40,14 +47,31 @@ export class Nl3ParseError extends Error {
   /** The (invalid) triple extracted from the text, when extraction got that far. */
   readonly candidate?: Triple;
 
+  /** The predicate value that was ambiguous during type inference. */
+  readonly predicate?: string;
+
+  /** The candidate types for the ambiguous predicate. */
+  readonly candidates?: string[];
+
   constructor(
     message: string,
-    details: { input?: unknown; candidate?: Triple } = {},
+    details: {
+      input?: unknown;
+      candidate?: Triple;
+      predicate?: string;
+      candidates?: string[];
+    } = {},
   ) {
     super(message);
     this.input = details.input;
     if (details.candidate) {
       this.candidate = details.candidate;
+    }
+    if (details.predicate) {
+      this.predicate = details.predicate;
+    }
+    if (details.candidates) {
+      this.candidates = details.candidates;
     }
   }
 }

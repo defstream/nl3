@@ -26,7 +26,7 @@ export default function nl3(options: Nl3Options = {}): Nl3Client {
   const rules = buildRuleset(options.grammar ?? [], options.vocabulary ?? {});
   return {
     rules,
-    parse: (text) => parseText(text, rules),
+    parse: (text) => parseText(text, rules, options.ambiguity, options.tagger),
   };
 }
 
@@ -36,6 +36,7 @@ export type {
   Grammar,
   Nl3Options,
   TaggedToken,
+  Tagger,
   Triple,
   TriplePart,
   Vocabulary,

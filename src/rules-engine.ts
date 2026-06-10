@@ -9,12 +9,19 @@ export interface ObjectRule {
   predicates: Record<string, { subjects: string[] }>;
 }
 
+export interface GrammarRule {
+  subject: string;
+  predicate: string;
+  object: string;
+}
+
 /** Grammar compiled into lookup tables, plus the user vocabulary. */
 export interface Ruleset {
   subjects: Record<string, SubjectRule>;
   predicates: string[];
   objects: Record<string, ObjectRule>;
   vocabulary: Vocabulary;
+  entries: GrammarRule[];
 }
 
 /** Compiles 'subject predicate object' grammar strings into a Ruleset. */
@@ -27,6 +34,7 @@ export function buildRuleset(
     predicates: [],
     objects: {},
     vocabulary,
+    entries: [],
   };
 
   for (const rule of grammar) {
@@ -35,6 +43,8 @@ export function buildRuleset(
     const subject = singularize(rawSubject);
     const predicate = singularize(rawPredicate);
     const object = singularize(rawObject);
+
+    ruleset.entries.push({ subject, predicate, object });
 
     const subjectRule = (ruleset.subjects[subject] ??= { predicates: {} });
     const subjectObjects = (subjectRule.predicates[predicate] ??= {

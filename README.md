@@ -136,14 +136,20 @@ phrases/sec on modern hardware — see `make bench`.
 A Makefile wraps the npm scripts — run `make help` to list all targets:
 
 ```shell
-make install   # install dependencies (npm ci)
-make test      # run the test suite
-make coverage  # tests + coverage report (thresholds enforced)
-make lint      # eslint (type-aware)
-make typecheck # type-check all sources including tests
-make build     # compile TypeScript to dist/
-make bench     # run the benchmark suite
-make check     # everything CI runs: lint, format, typecheck, build, tests+coverage
+make install              # install dependencies (npm ci)
+make test                 # run the test suite
+make coverage             # tests + coverage report (thresholds enforced)
+make lint                 # eslint (type-aware)
+make typecheck            # type-check all sources including tests
+make build                # compile TypeScript to dist/
+make bench                # run the benchmark suite
+make check                # everything CI runs: lint, format, typecheck, build, tests+coverage
+make examples             # run all examples
+make example-basic        # vocabulary & synonyms quick-start
+make example-ambiguity    # first-match vs. error ambiguity policy
+make example-messenger    # multi-relation messenger grammar
+make example-custom-tagger # plug in a custom POS tagger
+make example-adventure    # interactive text-adventure demo
 ```
 
 Prefer npm directly? The same tasks exist as scripts:

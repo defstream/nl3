@@ -3,7 +3,7 @@ import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig(
-  globalIgnores(['dist/', 'coverage/', 'node_modules/']),
+  globalIgnores(['dist/', 'coverage/', 'node_modules/', 'examples/']),
   eslint.configs.recommended,
   tseslint.configs.recommendedTypeChecked,
   {
