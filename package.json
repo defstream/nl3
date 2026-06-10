@@ -1,55 +1,69 @@
 {
   "name": "nl3",
-  "version": "0.0.3",
-  "description": "nl3 - natural language triples",
+  "version": "1.0.0",
+  "description": "nl3 - natural language triples. Parse RDF-style triples from plain English.",
   "license": "MIT",
   "author": "Hector Gray <hgray@incredi.co> (https://github.com/defstream)",
-  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/defstream/nl3.git"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "logo.png"
+  ],
   "engines": {
-    "node": ">=0.10"
+    "node": ">=20"
   },
   "scripts": {
-    "doc": "jsdoc -R ./README.md -r -d ./doc/api ./lib ./index.js",
-    "test": "snyk test && istanbul cover --dir ./doc/coverage _mocha -- --recursive && cat ./doc/coverage/lcov.info | ./node_modules/codecov/bin/codecov",
-    "analyze": "plato -d ./doc/analysis -r ./lib ./index.js",
-    "clean": "rm -rf ./doc",
-    "build": "npm run clean && npm run doc && npm run test && npm run analyze"
+    "build": "npm run clean && tsc -p tsconfig.json",
+    "clean": "rm -rf dist",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "nl3",
-    "nl",
-    "l3n",
-    "lne3",
-    "n3l",
     "natural",
     "language",
     "triple",
-    "tripple",
-    "3",
-    "nodejs",
-    "node",
-    "rdf",
     "triples",
+    "rdf",
+    "nlp",
     "english",
     "text",
     "graph",
-    "search",
-    "javascript"
+    "parser",
+    "typescript"
   ],
   "dependencies": {
-    "neo-async": "1.8.2",
-    "pluralize": "1.2.1",
-    "pos": "0.3.0",
-    "speakeasy-nlp": "0.2.2",
-    "stemmer": "0.1.4"
+    "pluralize": "^8.0.0",
+    "stemmer": "^2.0.1",
+    "wink-pos-tagger": "^2.2.2"
   },
   "devDependencies": {
-    "chai": "3.5.0",
-    "snyk": "1.14.3",
-    "codecov": "1.0.1",
-    "istanbul": "0.4.3",
-    "jsdoc": "3.4.0",
-    "mocha": "2.4.5",
-    "plato": "1.5.0"
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^25.9.2",
+    "@types/pluralize": "^0.0.33",
+    "@vitest/coverage-v8": "^4.1.8",
+    "eslint": "^10.4.1",
+    "prettier": "^3.8.4",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.61.0",
+    "vitest": "^4.1.8"
   }
 }
