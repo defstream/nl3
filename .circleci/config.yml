@@ -1,0 +1,24 @@
+# This project uses GitHub Actions for CI/CD.
+# See .github/workflows/ for lint, test, coverage, CodeQL, and release workflows.
+#
+# This file exists only to satisfy CircleCI's configuration requirement.
+# No jobs run here — please disconnect this repository from CircleCI if no
+# longer needed.
+
+version: 2.1
+
+jobs:
+  noop:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: Redirect to GitHub Actions
+          command: |
+            echo "CI for this project is handled by GitHub Actions."
+            echo "See: https://github.com/defstream/nl3/actions"
+
+workflows:
+  main:
+    jobs:
+      - noop
