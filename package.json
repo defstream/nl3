@@ -6,7 +6,8 @@
   "author": "Hector Gray <hgray@incredi.co> (https://github.com/defstream)",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/defstream/nl3.git"
+    "url": "git+https://github.com/defstream/nl3.git",
+    "directory": "."
   },
   "type": "module",
   "sideEffects": false,

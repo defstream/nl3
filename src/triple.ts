@@ -63,6 +63,9 @@ export function buildTriple(
  * Buckets tokens by what they are: known subject/object types by name,
  * everything else (except prepositions and wh-words) as candidate values —
  * split into those seen before any type token and those seen after.
+ *
+ * Singularize is only called when the raw token doesn't already match a known
+ * type, avoiding unnecessary work for numeric values and proper nouns.
  */
 function reduceParts(tokens: TaggedToken[], rules: Ruleset): ReducedParts {
   const result: ReducedParts = {
@@ -72,7 +75,12 @@ function reduceParts(tokens: TaggedToken[], rules: Ruleset): ReducedParts {
     after: [],
   };
   for (const part of tokens) {
-    const normalized = singularize(part[0]);
+    const raw = part[0];
+    // Fast path: check raw token before paying the singularize cost.
+    const normalized =
+      rules.objects[raw] !== undefined || rules.subjects[raw] !== undefined
+        ? raw
+        : singularize(raw);
     let added = false;
     if (rules.objects[normalized]) {
       result.objects.push(normalized);
@@ -93,6 +101,9 @@ function reduceParts(tokens: TaggedToken[], rules: Ruleset): ReducedParts {
   return result;
 }
 
+/** Returns the first value word from a ReducedParts bucket. */
 function firstValue(parts: ReducedParts): string | undefined {
-  return [...parts.after, ...parts.before].map(([word]) => word)[0];
+  // after tokens are preferred (they follow the type keyword); fall back to
+  // before tokens for bare phrases like 'jack contacts jill'.
+  return (parts.after[0] ?? parts.before[0])?.[0];
 }

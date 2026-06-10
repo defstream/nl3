@@ -22,11 +22,20 @@ export interface Tagger {
   tag(text: string): TaggedToken[];
 }
 
+/**
+ * How to resolve a phrase where the subject type is ambiguous (multiple grammar
+ * rules share the same predicate with different subject types).
+ *
+ * - `'first-match'` (default) — use the first matching rule in grammar order.
+ * - `'error'` — throw an `Nl3ParseError` with `.candidates` listing the options.
+ */
+export type AmbiguityPolicy = 'first-match' | 'error';
+
 export interface Nl3Options {
   grammar?: Grammar;
   vocabulary?: Vocabulary;
   tagger?: Tagger;
-  ambiguity?: 'first-match' | 'error';
+  ambiguity?: AmbiguityPolicy;
 }
 
 /** A token and its Penn Treebank part-of-speech tag, e.g. ['follow', 'VB']. */

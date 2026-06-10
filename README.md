@@ -125,6 +125,43 @@ try {
 }
 ```
 
+### `client.tryParse(text)`
+
+Like `parse()`, but returns `null` instead of throwing when the phrase cannot
+form a valid triple. Useful when rejection is a normal control-flow outcome:
+
+```ts
+const triple = client.tryParse('user jack msgs user jill');
+if (triple) {
+  // handle valid triple
+}
+```
+
+### `options.ambiguity` — `AmbiguityPolicy`
+
+Controls what happens when the subject type is ambiguous (multiple grammar rules
+share the same predicate with different subject types):
+
+- `'first-match'` (default) — use the first matching rule in grammar order.
+- `'error'` — throw an `Nl3ParseError` with `.candidates` listing the options.
+
+```ts
+import nl3, { Nl3ParseError } from 'nl3';
+
+const strict = nl3({
+  grammar: ['users message users', 'admins message users'],
+  ambiguity: 'error',
+});
+
+try {
+  strict.parse('alice messages bob'); // ambiguous — user or admin?
+} catch (error) {
+  if (error instanceof Nl3ParseError) {
+    error.candidates; // ['user', 'admin']
+  }
+}
+```
+
 ## Performance
 
 Importing nl3 is cheap (~10 ms); the part-of-speech lexicon (~130 ms) loads

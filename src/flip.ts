@@ -1,7 +1,7 @@
 import { lastPredicate } from './predicates.js';
 import type { Ruleset } from './rules-engine.js';
 import { Nl3ParseError } from './types.js';
-import type { Classification, Triple } from './types.js';
+import type { AmbiguityPolicy, Classification, Triple } from './types.js';
 
 /**
  * Validates a triple against the grammar; returns it unchanged when valid,
@@ -12,7 +12,7 @@ export function processTriple(
   triple: Triple,
   classification: Classification,
   rules: Ruleset,
-  ambiguity: 'first-match' | 'error' = 'first-match',
+  ambiguity: AmbiguityPolicy = 'first-match',
 ): Triple {
   const inferred = inferTypes(triple, rules, ambiguity);
   if (abides(inferred, rules)) {
@@ -52,11 +52,14 @@ export function flipTriple(
 /**
  * Fills in missing subject/object types by inferring them from the grammar
  * rules based on the matched predicate value.
+ *
+ * Uses the pre-computed lookup maps in the Ruleset for O(1) access instead
+ * of linear scans over all entries.
  */
 export function inferTypes(
   triple: Triple,
   rules: Ruleset,
-  ambiguity: 'first-match' | 'error',
+  ambiguity: AmbiguityPolicy,
 ): Triple {
   const predicate = triple.predicate.value;
   if (!predicate) {
@@ -66,24 +69,16 @@ export function inferTypes(
   let subjectType = triple.subject.type;
   let objectType = triple.object.type;
 
-  // Subject type: any subject whose grammar rules include this predicate.
+  // Subject type: look up which subject types are valid for this predicate.
   if (subjectType === undefined) {
-    const candidates = orderedDedup(
-      rules.entries
-        .filter((e) => e.predicate === predicate)
-        .map((e) => e.subject),
-    );
+    const candidates = rules.subjectsByPredicate[predicate] ?? [];
     subjectType = pick(predicate, candidates, ambiguity);
   }
 
-  // Object type: the objects allowed for the (now-known) subject + predicate.
+  // Object type: look up valid object types for (subject, predicate).
   if (objectType === undefined && subjectType !== undefined) {
-    const subject = subjectType;
-    const candidates = orderedDedup(
-      rules.entries
-        .filter((e) => e.subject === subject && e.predicate === predicate)
-        .map((e) => e.object),
-    );
+    const key = `${subjectType}\x00${predicate}`;
+    const candidates = rules.objectsBySubjectPredicate[key] ?? [];
     objectType = pick(predicate, candidates, ambiguity);
   }
 
@@ -101,20 +96,10 @@ export function inferTypes(
   };
 }
 
-function orderedDedup(arr: string[]): string[] {
-  const out: string[] = [];
-  for (const item of arr) {
-    if (!out.includes(item)) {
-      out.push(item);
-    }
-  }
-  return out;
-}
-
 function pick(
   predicate: string,
   candidates: string[],
-  ambiguity: 'first-match' | 'error',
+  ambiguity: AmbiguityPolicy,
 ): string | undefined {
   if (candidates.length === 0) {
     return undefined;

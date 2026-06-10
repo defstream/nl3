@@ -8,7 +8,8 @@ export function singularize(text: string): string {
 }
 
 // Stemming is pure, and firstPredicate's two-pass scan can stem the same
-// token twice per parse. Bounded so adversarial input can't grow it forever.
+// token twice per parse. Bounded LRU: when the cap is hit, the oldest entry
+// is evicted rather than clearing the whole cache, avoiding cold-start cliffs.
 const stemCache = new Map<string, string>();
 const STEM_CACHE_LIMIT = 10_000;
 
@@ -24,7 +25,8 @@ export function mapPredicate(
   if (stem === undefined) {
     stem = stemmer(singularize(word));
     if (stemCache.size >= STEM_CACHE_LIMIT) {
-      stemCache.clear();
+      // Evict the oldest (insertion-order) entry instead of wiping the cache.
+      stemCache.delete(stemCache.keys().next().value as string);
     }
     stemCache.set(word, stem);
   }

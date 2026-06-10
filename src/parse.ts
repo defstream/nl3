@@ -3,7 +3,7 @@ import { processTriple } from './flip.js';
 import type { Ruleset } from './rules-engine.js';
 import { buildTriple } from './triple.js';
 import { Nl3ParseError } from './types.js';
-import type { Triple, Tagger } from './types.js';
+import type { AmbiguityPolicy, Tagger, Triple } from './types.js';
 
 /**
  * Parses text into a validated triple.
@@ -12,7 +12,7 @@ import type { Triple, Tagger } from './types.js';
 export function parseText(
   text: unknown,
   rules: Ruleset,
-  ambiguity: 'first-match' | 'error' = 'first-match',
+  ambiguity: AmbiguityPolicy = 'first-match',
   tagger?: Tagger,
 ): Triple {
   if (typeof text !== 'string' || !text.trim()) {
