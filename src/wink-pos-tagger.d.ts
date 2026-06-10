@@ -1,7 +1,8 @@
 declare module 'wink-pos-tagger' {
   interface WinkToken {
     value: string;
-    tag: 'word' | 'number' | 'punctuation' | 'currency' | string;
+    /** Token kind, e.g. 'word', 'number', 'punctuation', 'currency'. */
+    tag: string;
     pos: string;
     lemma?: string;
     normal?: string;
