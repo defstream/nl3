@@ -3,9 +3,12 @@ import { buildRuleset } from '../src/rules-engine.js';
 
 describe('buildRuleset', () => {
   it('parses singularized grammar into subjects, predicates and objects', () => {
-    const rules = buildRuleset(['users follow users', 'users create messages'], {
-      creat: 'create',
-    });
+    const rules = buildRuleset(
+      ['users follow users', 'users create messages'],
+      {
+        creat: 'create',
+      },
+    );
 
     expect(rules.subjects['user']?.predicates['follow']?.objects).toEqual([
       'user',
