@@ -31,3 +31,5 @@ node_modules
 
 # build output
 dist
+
+.playwright-mcp

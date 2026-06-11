@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>nl3 — Natural Language Triples for JavaScript &amp; TypeScript</title>
+    <meta
+      name="description"
+      content="nl3 parses short plain-English Subject–Predicate–Object phrases into validated triples. TypeScript-first, ESM-only, fast."
+    />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="nl3 — Natural Language Triples for JavaScript &amp; TypeScript" />
+    <meta
+      property="og:description"
+      content="Parse plain-English Subject–Predicate–Object phrases into validated triples."
+    />
+    <meta property="og:type" content="website" />
+
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2322d3ee'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='15' font-weight='bold' fill='%2305070c' text-anchor='middle'%3En3%3C/text%3E%3C/svg%3E"
+    />
+
+    <!-- Tailwind (vendored locally — no runtime CDN) -->
+    <script src="assets/tailwind.js"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Bricolage Grotesque"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+              mono: ['"IBM Plex Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+            },
+            colors: {
+              volt: {
+                DEFAULT: '#22d3ee',
+                deep: '#0e7490',
+              },
+              ink: {
+                900: '#05070c',
+                800: '#0a0d14',
+                700: '#10141d',
+                600: '#1a2030',
+              },
+            },
+            keyframes: {
+              floaty: {
+                '0%,100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-6px)' },
+              },
+              fadeup: {
+                '0%': { opacity: '0', transform: 'translateY(12px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              slotin: {
+                '0%': { opacity: '0', transform: 'translateY(10px) scale(0.97)' },
+                '100%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+              },
+            },
+            animation: {
+              floaty: 'floaty 5s ease-in-out infinite',
+              fadeup: 'fadeup 0.6s ease-out both',
+              slotin: 'slotin 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2) both',
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- highlight.js (vendored locally; js/ts ship in the core bundle) -->
+    <link rel="stylesheet" href="assets/atom-one-dark.min.css" />
+    <script src="assets/highlight.min.js"></script>
+
+    <style>
+      body {
+        background:
+          radial-gradient(55rem 38rem at -10% -10%, rgba(34, 211, 238, 0.1), transparent 60%),
+          radial-gradient(48rem 36rem at 110% 30%, rgba(14, 116, 144, 0.12), transparent 55%),
+          #05070c;
+      }
+      .grid-bg {
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+        background-size: 44px 44px;
+      }
+      .card-glow:hover {
+        box-shadow:
+          0 0 0 1px rgba(34, 211, 238, 0.35),
+          0 18px 50px -20px rgba(34, 211, 238, 0.4);
+      }
+      pre code.hljs {
+        background: transparent;
+        padding: 0;
+        font-family: 'IBM Plex Mono', ui-monospace, monospace;
+        font-size: 0.86rem;
+        line-height: 1.65;
+      }
+    </style>
+  </head>
+
+  <body class="font-sans text-slate-300 antialiased selection:bg-volt/30 selection:text-white">
+    <!-- NAV -->
+    <header class="sticky top-0 z-50 border-b border-white/5 bg-ink-900/70 backdrop-blur-xl">
+      <nav class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+        <a href="#top" class="flex items-center gap-2.5 font-bold text-white">
+          <span
+            class="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-volt to-volt-deep text-sm font-extrabold text-ink-900"
+            >n3</span
+          >
+          <span class="tracking-tight">nl3<span class="text-volt">·js</span></span>
+        </a>
+        <div class="hidden items-center gap-8 text-sm font-medium text-slate-400 md:flex">
+          <a href="#how" class="transition hover:text-white">How it works</a>
+          <a href="#features" class="transition hover:text-white">Features</a>
+          <a href="#examples" class="transition hover:text-white">Examples</a>
+          <a href="#install" class="transition hover:text-white">Install</a>
+        </div>
+        <a
+          href="https://github.com/defstream/nl3"
+          class="group inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3.5 py-2 text-sm font-semibold text-white transition hover:border-volt/50 hover:bg-volt/10"
+        >
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path
+              d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.1.1 1.7 1.2 1.7 1.2 1 1.7 2.7 1.2 3.3.9.1-.7.4-1.2.7-1.5-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.4-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0C17 5 18 5.3 18 5.3c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"
+            />
+          </svg>
+          Star
+        </a>
+      </nav>
+    </header>
+
+    <!-- HERO -->
+    <section id="top" class="relative overflow-hidden">
+      <div
+        class="grid-bg pointer-events-none absolute inset-0 [mask-image:radial-gradient(50rem_30rem_at_50%_0,black,transparent)]"
+      ></div>
+      <div class="relative mx-auto max-w-6xl px-6 pb-20 pt-20 md:pt-28">
+        <div class="mx-auto max-w-3xl text-center">
+          <span
+            class="animate-fadeup inline-flex items-center gap-2 rounded-full border border-volt/30 bg-volt/10 px-3 py-1 text-xs font-semibold text-volt"
+          >
+            <span class="h-1.5 w-1.5 rounded-full bg-volt"></span>
+            Natural language triples for JavaScript &amp; TypeScript
+          </span>
+          <h1
+            class="animate-fadeup mt-6 text-4xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-6xl"
+          >
+            Plain English in.
+            <span class="bg-gradient-to-r from-volt to-cyan-100 bg-clip-text text-transparent"
+              >Structured triples out.</span
+            >
+          </h1>
+          <p class="animate-fadeup mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-400">
+            <strong class="text-slate-200">nl3</strong> parses short
+            <em>Subject&nbsp;·&nbsp;Predicate&nbsp;·&nbsp;Object</em> phrases into validated
+            triples. Describe your domain with a grammar and a vocabulary — nl3 handles the
+            synonyms, tenses, reversed phrasings, and missing types.
+          </p>
+          <div class="animate-fadeup mt-9 flex flex-wrap items-center justify-center gap-3">
+            <a
+              href="#install"
+              class="rounded-xl bg-gradient-to-br from-volt to-volt-deep px-6 py-3 text-sm font-bold text-ink-900 shadow-lg shadow-volt/20 transition hover:scale-[1.03]"
+              >Get started</a
+            >
+            <a
+              href="#examples"
+              class="rounded-xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:border-white/25"
+              >See examples</a
+            >
+          </div>
+        </div>
+
+        <!-- LIVE DEMO -->
+        <div class="animate-fadeup mt-16">
+          <div
+            class="mx-auto max-w-4xl rounded-2xl border border-white/10 bg-ink-800/60 p-4 shadow-2xl backdrop-blur sm:p-6"
+          >
+            <div class="mb-5 flex items-center gap-1.5 px-1">
+              <span class="h-3 w-3 rounded-full bg-red-400/80"></span>
+              <span class="h-3 w-3 rounded-full bg-yellow-400/80"></span>
+              <span class="h-3 w-3 rounded-full bg-green-400/80"></span>
+              <span class="ml-3 font-mono text-xs text-slate-500">nl3.parse(…) — click a phrase</span>
+            </div>
+
+            <!-- phrase chips -->
+            <div id="chips" class="mb-4 flex flex-wrap justify-center gap-2">
+              <!-- populated by script -->
+            </div>
+
+            <!-- input line -->
+            <div
+              id="demo-input"
+              class="rounded-lg border border-white/5 bg-ink-900/70 px-4 py-3 text-center font-mono text-sm text-slate-300"
+            >
+              "user <span class="text-cyan-200">jack</span> contacts user
+              <span class="text-cyan-200">jill</span>"
+            </div>
+
+            <!-- arrow -->
+            <div class="my-3 flex justify-center text-volt">
+              <svg
+                class="h-6 w-6 animate-floaty"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M12 5v14M5 12l7 7 7-7" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+
+            <!-- output triple -->
+            <div id="demo-output" class="grid gap-3 sm:grid-cols-3">
+              <!-- populated by script -->
+            </div>
+            <div id="demo-note" class="mt-3 text-center font-mono text-xs text-slate-500"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how" class="mx-auto max-w-6xl px-6 py-20">
+      <div class="mx-auto mb-14 max-w-2xl text-center">
+        <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          Three ideas, that&rsquo;s it
+        </h2>
+        <p class="mt-3 text-slate-400">
+          You teach nl3 your domain once, then throw natural phrasings at it.
+        </p>
+      </div>
+      <div class="grid gap-6 md:grid-cols-3">
+        <div class="rounded-2xl border border-white/10 bg-ink-800/40 p-7">
+          <div
+            class="grid h-11 w-11 place-items-center rounded-xl bg-violet-400/10 text-lg font-bold text-violet-300"
+          >
+            1
+          </div>
+          <h3 class="mt-5 text-lg font-semibold text-white">Grammar</h3>
+          <p class="mt-2 text-sm leading-relaxed text-slate-400">
+            Declare valid relations as
+            <code class="font-mono text-volt">'Subject Predicate Object'</code>. Words are
+            singularized, so a rule covers every number form.
+          </p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-ink-800/40 p-7">
+          <div
+            class="grid h-11 w-11 place-items-center rounded-xl bg-volt/10 text-lg font-bold text-volt"
+          >
+            2
+          </div>
+          <h3 class="mt-5 text-lg font-semibold text-white">Vocabulary</h3>
+          <p class="mt-2 text-sm leading-relaxed text-slate-400">
+            Map word <em>stems</em> to predicates so synonyms and tenses —
+            <code class="font-mono text-volt">msg</code>,
+            <code class="font-mono text-volt">messaged</code>,
+            <code class="font-mono text-volt">contacted</code> — all collapse onto one.
+          </p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-ink-800/40 p-7">
+          <div
+            class="grid h-11 w-11 place-items-center rounded-xl bg-emerald-400/10 text-lg font-bold text-emerald-300"
+          >
+            3
+          </div>
+          <h3 class="mt-5 text-lg font-semibold text-white">Parse</h3>
+          <p class="mt-2 text-sm leading-relaxed text-slate-400">
+            Call <code class="font-mono text-volt">parse()</code> and get a validated
+            <code class="font-mono text-volt">Triple</code> — with reversed phrasings flipped back
+            into shape and missing types inferred.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="features" class="border-y border-white/5 bg-ink-800/30">
+      <div class="mx-auto max-w-6xl px-6 py-20">
+        <div class="mx-auto mb-14 max-w-2xl text-center">
+          <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            Built for modern JavaScript
+          </h2>
+          <p class="mt-3 text-slate-400">TypeScript-first, ESM-only, dependency-light.</p>
+        </div>
+        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div class="card-glow rounded-2xl border border-white/10 bg-ink-900/50 p-6 transition">
+            <h3 class="font-semibold text-white">TypeScript-first</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-400">
+              Written in strict TypeScript with bundled declarations —
+              <code class="font-mono text-volt">Triple</code>,
+              <code class="font-mono text-volt">Nl3Options</code>, and friends are all exported.
+            </p>
+          </div>
+          <div class="card-glow rounded-2xl border border-white/10 bg-ink-900/50 p-6 transition">
+            <h3 class="font-semibold text-white">Typed errors &amp; tryParse</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-400">
+              <code class="font-mono text-volt">parse()</code> throws a structured
+              <code class="font-mono text-volt">Nl3ParseError</code> with
+              <code class="font-mono text-volt">.input</code> and
+              <code class="font-mono text-volt">.candidate</code>;
+              <code class="font-mono text-volt">tryParse()</code> returns
+              <code class="font-mono text-volt">null</code> instead.
+            </p>
+          </div>
+          <div class="card-glow rounded-2xl border border-white/10 bg-ink-900/50 p-6 transition">
+            <h3 class="font-semibold text-white">Type inference</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-400">
+              Omit an entity type and nl3 infers it from the grammar —
+              <code class="font-mono text-volt">jack contacts jill</code> resolves both ends. An
+              ambiguity policy controls the multi-match case.
+            </p>
+          </div>
+          <div class="card-glow rounded-2xl border border-white/10 bg-ink-900/50 p-6 transition">
+            <h3 class="font-semibold text-white">Synonyms &amp; tenses</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-400">
+              Classic Porter stemming means <code class="font-mono text-volt">sent</code>,
+              <code class="font-mono text-volt">sends</code>, and
+              <code class="font-mono text-volt">mailed</code> fold to one predicate.
+            </p>
+          </div>
+          <div class="card-glow rounded-2xl border border-white/10 bg-ink-900/50 p-6 transition">
+            <h3 class="font-semibold text-white">Auto-flipping</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-400">
+              Reversed phrasings like
+              <code class="font-mono text-volt">message 32 created user bob</code> are detected
+              against the grammar and flipped into the correctly oriented triple.
+            </p>
+          </div>
+          <div class="card-glow rounded-2xl border border-white/10 bg-ink-900/50 p-6 transition">
+            <h3 class="font-semibold text-white">Pluggable tagger</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-400">
+              A full POS tagger ships in-box (loaded lazily); pass your own
+              <code class="font-mono text-volt">Tagger</code> implementation to extend or replace
+              it.
+            </p>
+          </div>
+          <div class="card-glow rounded-2xl border border-white/10 bg-ink-900/50 p-6 transition">
+            <h3 class="font-semibold text-white">Fast &amp; JSON-ready</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-400">
+              ~60–90k parses/sec with a bounded stem cache and ~10ms import. Triples are plain
+              objects — <code class="font-mono text-volt">JSON.stringify</code> just works.
+            </p>
+          </div>
+          <div class="card-glow rounded-2xl border border-white/10 bg-ink-900/50 p-6 transition">
+            <h3 class="font-semibold text-white">ESM &amp; tree-shakable</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-400">
+              Pure ES modules, <code class="font-mono text-volt">sideEffects: false</code>, Node
+              &ge; 20. Three runtime dependencies, zero vulnerabilities.
+            </p>
+          </div>
+          <div class="card-glow rounded-2xl border border-white/10 bg-ink-900/50 p-6 transition">
+            <h3 class="font-semibold text-white">Also in Rust</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-400">
+              Need the same grammar in a systems stack? The
+              <a
+                href="https://github.com/defstream/nl3-rs"
+                class="text-volt underline decoration-volt/40 underline-offset-2 transition hover:decoration-volt"
+                >nl3-rs</a
+              >
+              port mirrors this library feature-for-feature.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXAMPLES -->
+    <section id="examples" class="mx-auto max-w-6xl px-6 py-20">
+      <div class="mx-auto mb-14 max-w-2xl text-center">
+        <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">Show me the code</h2>
+        <p class="mt-3 text-slate-400">A grammar, a vocabulary, and a parse.</p>
+      </div>
+
+      <div class="grid gap-6 lg:grid-cols-2">
+        <div class="rounded-2xl border border-white/10 bg-ink-800/50 p-6">
+          <div class="mb-4 flex items-center justify-between">
+            <h3 class="font-semibold text-white">Quick start</h3>
+            <span class="font-mono text-xs text-slate-500">examples/basic.js</span>
+          </div>
+          <pre><code class="language-typescript">import nl3 from 'nl3';
+
+const client = nl3({
+  grammar: ['users message users'],
+  vocabulary: {
+    msg: 'message',     // user jack msgs user jill
+    messag: 'message',  // user jack messaged user jill
+    contact: 'message', // user jack contacted user jill
+  },
+});
+
+client.parse('user jack contacts user jill');
+// {
+//   subject:   { type: 'user', value: 'jack' },
+//   predicate: { value: 'message' },
+//   object:    { type: 'user', value: 'jill' }
+// }</code></pre>
+        </div>
+
+        <div class="rounded-2xl border border-white/10 bg-ink-800/50 p-6">
+          <div class="mb-4 flex items-center justify-between">
+            <h3 class="font-semibold text-white">Type inference &amp; ambiguity</h3>
+            <span class="font-mono text-xs text-slate-500">examples/ambiguity.js</span>
+          </div>
+          <pre><code class="language-typescript">// 'message' only ever relates users, so bare
+// phrases resolve both ends:
+client.parse('jack contacts jill');
+// subject: { type: 'user', value: 'jack' }  ← inferred
+// object:  { type: 'user', value: 'jill' }  ← inferred
+
+// When two rules share a predicate, pick a policy:
+const strict = nl3({
+  grammar: ['users message users', 'admins message users'],
+  vocabulary: { contact: 'message' },
+  ambiguity: 'error', // default: 'first-match'
+});
+
+try {
+  strict.parse('alice contacts bob');
+} catch (error) {
+  error.predicate;  // 'message'
+  error.candidates; // ['user', 'admin']
+}</code></pre>
+        </div>
+
+        <div class="rounded-2xl border border-white/10 bg-ink-800/50 p-6">
+          <div class="mb-4 flex items-center justify-between">
+            <h3 class="font-semibold text-white">Errors, structured</h3>
+            <span class="font-mono text-xs text-slate-500">examples/messenger.js</span>
+          </div>
+          <pre><code class="language-typescript">import nl3, { Nl3ParseError } from 'nl3';
+
+try {
+  client.parse('dog jim hates cat sue');
+} catch (error) {
+  if (error instanceof Nl3ParseError) {
+    error.input;     // 'dog jim hates cat sue'
+    error.candidate; // the rejected triple
+  }
+}
+
+// …or skip the try/catch entirely:
+const triple = client.tryParse('dog jim hates cat sue');
+// => null</code></pre>
+        </div>
+
+        <div class="rounded-2xl border border-white/10 bg-ink-800/50 p-6">
+          <div class="mb-4 flex items-center justify-between">
+            <h3 class="font-semibold text-white">Runnable examples</h3>
+            <span class="font-mono text-xs text-slate-500">examples/</span>
+          </div>
+          <ul class="space-y-3 text-sm">
+            <li class="flex items-baseline gap-3">
+              <code class="shrink-0 font-mono text-volt">basic</code>
+              <span class="text-slate-400">One grammar rule; many phrasings &rarr; one triple</span>
+            </li>
+            <li class="flex items-baseline gap-3">
+              <code class="shrink-0 font-mono text-volt">messenger</code>
+              <span class="text-slate-400">A fuller domain plus both error modes</span>
+            </li>
+            <li class="flex items-baseline gap-3">
+              <code class="shrink-0 font-mono text-volt">ambiguity</code>
+              <span class="text-slate-400">first-match vs. error inference policies</span>
+            </li>
+            <li class="flex items-baseline gap-3">
+              <code class="shrink-0 font-mono text-volt">custom_tagger</code>
+              <span class="text-slate-400">Supplying your own POS tagger</span>
+            </li>
+            <li class="flex items-baseline gap-3">
+              <code class="shrink-0 font-mono text-volt">adventure</code>
+              <span class="text-slate-400">A playable text adventure — grammar as game affordances</span>
+            </li>
+          </ul>
+          <pre class="mt-5"><code class="language-shell">node examples/basic.js
+node examples/adventure.js</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- INSTALL -->
+    <section id="install" class="border-t border-white/5 bg-ink-800/30">
+      <div class="mx-auto max-w-3xl px-6 py-20 text-center">
+        <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">Install</h2>
+        <p class="mt-3 text-slate-400">
+          Node.js &ge; 20 &middot; ES modules &middot; TypeScript types included
+        </p>
+        <div
+          class="mx-auto mt-8 flex max-w-md items-center justify-between rounded-xl border border-white/10 bg-ink-900/70 px-5 py-4 font-mono text-sm"
+        >
+          <span class="text-slate-300"><span class="text-slate-500">$</span> npm install nl3</span>
+          <button
+            id="copy-install"
+            class="rounded-md border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-semibold text-slate-300 transition hover:border-volt/50 hover:text-white"
+          >
+            copy
+          </button>
+        </div>
+        <div class="mt-10 flex flex-wrap items-center justify-center gap-3 text-sm">
+          <a
+            href="https://github.com/defstream/nl3"
+            class="rounded-xl bg-gradient-to-br from-volt to-volt-deep px-6 py-3 font-bold text-ink-900 shadow-lg shadow-volt/20 transition hover:scale-[1.03]"
+            >View on GitHub</a
+          >
+          <a
+            href="https://www.npmjs.com/package/nl3"
+            class="rounded-xl border border-white/10 bg-white/5 px-6 py-3 font-semibold text-white transition hover:border-white/25"
+            >npm package</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-white/5">
+      <div
+        class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-10 text-sm text-slate-500 sm:flex-row"
+      >
+        <p>
+          MIT &copy; <a href="https://github.com/defstream" class="text-slate-300 transition hover:text-white">Hector Gray</a>
+        </p>
+        <p class="font-mono text-xs">
+          subject &middot; <span class="text-volt">predicate</span> &middot; object
+        </p>
+        <a
+          href="https://github.com/defstream/nl3-rs"
+          class="transition hover:text-white"
+          >also available in Rust &rarr;</a
+        >
+      </div>
+    </footer>
+
+    <script>
+      hljs.highlightAll();
+
+      // --- Interactive demo -------------------------------------------------
+      // Every result below is the real output of nl3 for the messenger grammar
+      // (verified against the library — see test/messenger.test.ts).
+      const DEMOS = [
+        {
+          phrase: 'user jack contacts user jill',
+          note: "vocabulary: 'contacts' → stem 'contact' → predicate 'message'",
+          triple: {
+            subject: { type: 'user', value: 'jack' },
+            predicate: { value: 'message', hint: 'contacts → message' },
+            object: { type: 'user', value: 'jill' },
+          },
+        },
+        {
+          phrase: 'users who follow user 42',
+          note: 'open subject — “users who…” leaves the subject value empty',
+          triple: {
+            subject: { type: 'user', value: '—' },
+            predicate: { value: 'follow', hint: 'follow → follow' },
+            object: { type: 'user', value: '42' },
+          },
+        },
+        {
+          phrase: 'user bob sent message 99',
+          note: "tenses fold: 'sent' → stem 'sent' → predicate 'send'",
+          triple: {
+            subject: { type: 'user', value: 'bob' },
+            predicate: { value: 'send', hint: 'sent → send' },
+            object: { type: 'message', value: '99' },
+          },
+        },
+        {
+          phrase: 'message 32 created user bob',
+          note: 'reversed phrasing detected — subject and object flipped automatically',
+          flipped: true,
+          triple: {
+            subject: { type: 'user', value: 'bob' },
+            predicate: { value: 'create', hint: 'created → create' },
+            object: { type: 'message', value: '32' },
+          },
+        },
+        {
+          phrase: 'jack contacts jill',
+          note: "no types in the phrase — both inferred from 'users message users'",
+          inferred: true,
+          triple: {
+            subject: { type: 'user', value: 'jack', inferred: true },
+            predicate: { value: 'message', hint: 'contacts → message' },
+            object: { type: 'user', value: 'jill', inferred: true },
+          },
+        },
+        {
+          phrase: 'dog jim hates cat sue',
+          note: 'not in the grammar — parse() throws Nl3ParseError, tryParse() returns null',
+          error: true,
+        },
+      ];
+
+      const chips = document.getElementById('chips');
+      const input = document.getElementById('demo-input');
+      const output = document.getElementById('demo-output');
+      const note = document.getElementById('demo-note');
+
+      function termCard(label, term, colors, delay) {
+        return (
+          '<div class="animate-slotin rounded-lg border ' + colors.border + ' ' + colors.bg +
+          ' p-4" style="animation-delay:' + delay + 'ms">' +
+          '<div class="text-[11px] font-semibold uppercase tracking-wider ' + colors.text + '">' +
+          label + (term.inferred ? ' <span class="opacity-70">(inferred)</span>' : '') + '</div>' +
+          '<div class="mt-1.5 font-mono text-sm text-white">' + (term.type ?? '—') + '</div>' +
+          '<div class="font-mono text-xs text-slate-400">' + (term.value ?? '—') +
+          (term.hint ? '<span class="text-slate-500"> · ' + term.hint + '</span>' : '') +
+          '</div></div>'
+        );
+      }
+
+      function render(demo) {
+        input.innerHTML = '"' + demo.phrase.replace(
+          /\b(jack|jill|bob|42|99|32|jim|sue)\b/g,
+          '<span class="text-cyan-200">$1</span>',
+        ) + '"';
+        note.textContent = demo.note;
+
+        if (demo.error) {
+          output.innerHTML =
+            '<div class="animate-slotin rounded-lg border border-red-400/30 bg-red-400/5 p-4 sm:col-span-3">' +
+            '<div class="text-[11px] font-semibold uppercase tracking-wider text-red-300">Nl3ParseError</div>' +
+            '<div class="mt-1.5 font-mono text-sm text-white">Invalid triple</div>' +
+            '<div class="font-mono text-xs text-slate-400">error.input · error.candidate</div></div>';
+          return;
+        }
+
+        const t = demo.triple;
+        output.innerHTML =
+          termCard('Subject', t.subject, { border: 'border-violet-400/20', bg: 'bg-violet-400/5', text: 'text-violet-300/80' }, 0) +
+          termCard(
+            'Predicate' + (demo.flipped ? ' <span class="opacity-70">(flipped)</span>' : ''),
+            { type: t.predicate.value, value: undefined, hint: t.predicate.hint },
+            { border: 'border-volt/30', bg: 'bg-volt/5', text: 'text-volt' },
+            90,
+          ) +
+          termCard('Object', t.object, { border: 'border-emerald-400/20', bg: 'bg-emerald-400/5', text: 'text-emerald-300/80' }, 180);
+      }
+
+      DEMOS.forEach((demo, i) => {
+        const chip = document.createElement('button');
+        chip.className =
+          'rounded-full border border-white/10 bg-white/5 px-3 py-1.5 font-mono text-xs text-slate-300 transition hover:border-volt/50 hover:text-white' +
+          (demo.error ? ' hover:border-red-400/50' : '');
+        chip.textContent = demo.phrase;
+        chip.addEventListener('click', () => {
+          for (const c of chips.children) c.classList.remove('border-volt/60', 'text-white', 'bg-volt/10');
+          chip.classList.add('border-volt/60', 'text-white', 'bg-volt/10');
+          render(demo);
+        });
+        chips.appendChild(chip);
+        if (i === 0) chip.click();
+      });
+
+      // --- Copy install command --------------------------------------------
+      document.getElementById('copy-install').addEventListener('click', async (event) => {
+        await navigator.clipboard.writeText('npm install nl3');
+        event.target.textContent = 'copied!';
+        setTimeout(() => (event.target.textContent = 'copy'), 1500);
+      });
+    </script>
+  </body>
+</html>
