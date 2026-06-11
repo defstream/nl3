@@ -1,4 +1,5 @@
 dist/
 coverage/
+docs/
 package-lock.json
 logo.png
