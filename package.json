@@ -1,6 +1,6 @@
 {
   "name": "nl3",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "nl3 - natural language triples. Parse RDF-style triples from plain English.",
   "license": "MIT",
   "author": "Hector Gray <hgray@incredi.co> (https://github.com/defstream)",
